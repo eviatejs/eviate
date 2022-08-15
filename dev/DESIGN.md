@@ -268,3 +268,7 @@ app.register(router);
 ## Versioning
 
 ## Dependency injection
+
+## GraphQL
+
+## Type-safe endpoints
