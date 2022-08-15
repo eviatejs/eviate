@@ -1,0 +1,48 @@
+{
+  "name": "blurr",
+  "version": "0.1.0",
+  "description": "Progressive web framework for bun",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "bun run src/index.ts",
+    "build": "tsup",
+    "release": "bumpp --commit --push --tag && npm publish",
+    "prepublishOnly": "bun run build",
+    "test": "bun wiptest",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1"
+  },
+  "devDependencies": {
+    "bun-types": "^0.1.8",
+    "bumpp": "^8.2.1",
+    "typescript": "^4.7.4",
+    "tsup": "^6.2.2",
+    "husky": "^8.0.0"
+  },
+  "keywords": [],
+  "author": "BlurrJS team",
+  "license": "MIT",
+  "homepage": "https://github.com/blurrjs/blurr",
+  "bugs": {
+    "url": "https://github.com/blurrjs/blurr/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blurrjs/blurr.git"
+  }
+}
