@@ -34,7 +34,7 @@ const app = new Blurr({
   docs: {
     redoc: '/redoc',
     swagger: '/swagger'
-  }
+  },
   // For autodocs, use OpenAPI schema,
   openapi: (app: App) => {
     return {
