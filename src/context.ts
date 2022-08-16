@@ -12,6 +12,8 @@ export class Context {
   readonly headers: Request['headers'];
   readonly url: URL;
 
+  // TODO: App global state
+
   constructor(req: Request) {
     this.req = req;
 
