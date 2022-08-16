@@ -25,7 +25,8 @@
   },
   "dependencies": {
     "lint-staged": "^13.0.3",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "zod": "^3.18.0"
   },
   "devDependencies": {
     "bun-types": "^0.1.8",
