@@ -74,10 +74,10 @@ Handling errors globally:
 ```ts
 import type { BlurrRequest, BlurrError } from 'blurr';
 
-app.on_event('error', (request: BlurrRequest, error: BlurrError) => {
+app.on_error((request: BlurrRequest, error: BlurrError) => {
   // Each error will have the route, the actual error
   // and the stack trace.
-  console.log(error.route, error.error, error.stack);
+  console.log(error.route, error.message, error.stack);
 });
 ```
 
