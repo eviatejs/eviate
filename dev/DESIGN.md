@@ -263,6 +263,12 @@ router.get('/', async _ => {
 app.register(router);
 ```
 
+The root router created when making a Blurr app is as so - `new Router('root')`.
+
+No URL prefixes or colliding names. Also, note that, router is going to be used for routing, the root router URLs can be accessed by `app.url_for('my-route')`, and others as, `app.url_for('router-name.my-route')`.
+
+There can be a nested way to generate the URLs aswell, `v1-router.health.ping`
+
 ## Websocket routes
 
 ## Templating & static files
