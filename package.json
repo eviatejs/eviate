@@ -17,6 +17,7 @@
   ],
   "scripts": {
     "dev": "bun run src/index.ts",
+    "run": "bun run examples/main.ts",
     "build": "tsup",
     "release": "bumpp --commit --push --tag && npm publish",
     "prepublishOnly": "bun run build",
