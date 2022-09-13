@@ -1,10 +1,10 @@
-import { AppState } from './core/state';
-import { EventHandler } from './core/event-handler';
-import { AppParamsSchema } from './schema/AppParams';
+import { AppState } from './state';
+import { EventHandler } from './event-handler';
+import { AppParamsSchema } from '../schema/AppParams';
 
-import type { AppParamsInput } from './schema/AppParams';
+import type { AppParamsInput } from '../schema/AppParams';
 
-export class Blurr {
+export class Engine {
   private appState: AppState;
   private eventHandler: EventHandler = new EventHandler();
 

@@ -1,6 +1,6 @@
-import { MiddlewarePosition } from './enums/MiddlewarePosition';
+import { MiddlewarePosition } from '../enums/MiddlewarePosition';
 
-import type { Context } from './context';
+import type { Context } from '../core/context';
 
 interface MiddlewareHandler {
   (ctx: Context): Context | Promise<Context>;
