@@ -2,9 +2,8 @@ import { Context } from './context';
 import { Tree } from './tree';
 
 export class router {
-  public notFound: Context;
-  public hanlder: Context;
-  public routes: [];
+  public notFound: Context | undefined;
+  public routes: Map<string, Tree>;
   constructor() {
     this.routes = new Map([
       ['GET', new Tree()],
