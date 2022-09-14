@@ -1,6 +1,6 @@
 import { Context } from './context';
 import { Tree } from './tree';
-import { matchedDate } from '../interfaces/match';
+import { matchedData } from '../interfaces/match';
 export class router {
   public notFound: (() => string) | undefined;
   public routes: Map<string, Tree>;
@@ -48,5 +48,15 @@ export class router {
   public put(path: string, handler: () => string) {
     this.register('PUT', path, handler);
   }
-  private match(path: string) {}
+  private match(method: string, path: string): matchedData | null {
+    const data = this.routes.get(method)?.find(path);
+    if (data) {
+      const returnData: matchedData = {
+        parmas: data.params,
+        handler: data.data.handler
+      };
+      return returnData;
+    }
+    return null;
+  }
 }
