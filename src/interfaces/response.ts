@@ -4,6 +4,6 @@ export interface response {
   json?: {};
   error?: Error | string | {};
   headers?: {};
-  interface: any;
+  interface?: any;
   Blob?: Blob;
 }

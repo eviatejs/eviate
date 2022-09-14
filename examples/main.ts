@@ -4,12 +4,14 @@ const app = new Engine({});
 const router = new Router();
 app.get('/', ctx => {
   console.log(ctx.method);
-  return 'Works omg';
+  return {
+    text: 'Hello'
+  };
 });
 
 router.get('/hello', ctx => {
   console.log(ctx.host);
-  return 'Router Works';
+  return { text: 'Router Works' };
 });
 
 app.use(router);

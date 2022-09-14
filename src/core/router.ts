@@ -2,6 +2,7 @@ import { Context } from './context';
 import { Tree } from './tree';
 import type { Handler } from '../interfaces/data';
 import { matchedData } from '../interfaces/match';
+import { response } from '../interfaces/response';
 
 export class router {
   public notFound: Handler | undefined;
@@ -68,8 +69,8 @@ export class router {
       return null;
     }
     ctx.params = data.params;
-    const returnval: string = data.data.handler(ctx);
-    ctx.res = new Response(returnval);
+    const returnval: response = data.data.handler(ctx);
+    ctx.res = new Response(returnval.text, returnval.headers);
     return ctx.res;
   }
 }
