@@ -1,10 +1,10 @@
 'use strict';
-
+import { data } from '../interfaces/data';
 export class Node {
   static DEFAULT: number;
   path: string;
   fullPath: string;
-  data: any;
+  data: data;
   priority: number;
   type: number;
   children: any;

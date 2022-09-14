@@ -1,3 +1,4 @@
+import { data } from '../interfaces/data';
 import { Node } from './node';
 
 export class Tree {
@@ -7,7 +8,7 @@ export class Tree {
     this.root = null;
   }
 
-  add(path: string, data: any) {
+  add(path: string, data: data) {
     if (this.isEmpty()) {
       this.root = new Node('', '', null);
     }
@@ -103,7 +104,7 @@ export class Tree {
     return this;
   }
 
-  appendNode(node: Node, path: string, fullPath: string, data: any) {
+  appendNode(node: Node, path: string, fullPath: string, data: data) {
     let offset = 0;
 
     let child: Node = new Node('', '', {});
