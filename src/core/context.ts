@@ -1,6 +1,7 @@
 export class Context {
   req: Request;
-
+  res: Response | null;
+  public params: any;
   // HTTP-related metadata
   readonly method: string;
   readonly path: string;
@@ -10,7 +11,6 @@ export class Context {
 
   constructor(req: Request) {
     this.req = req;
-
     const url = new URL(req.url);
 
     this.method = req.method;
@@ -18,7 +18,7 @@ export class Context {
     this.host = url.host;
     this.headers = req.headers;
     this.url = url;
-
+    this.res = null;
     this.req.blob();
   }
 

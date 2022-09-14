@@ -1,9 +1,15 @@
-import { Tree } from '../src/core/tree';
+import { Engine } from '../src';
 
-const tree: Tree = new Tree();
+const app = new Engine({});
 
-tree.add('/api/hello/:user', {});
+app.get('/', ctx => {
+  console.log(ctx.method);
+  return 'Works omg';
+});
 
-console.log(tree.find('/api/hello/sunrit'));
+app.get('/user/:name', ctx => {
+  return ctx.params.name;
+});
 
+app.listen();
 //Implement logic

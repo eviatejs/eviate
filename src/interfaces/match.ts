@@ -1,4 +1,6 @@
+import type { Handler } from './data';
+
 export interface matchedData {
   parmas: any;
-  handler: () => string;
+  handler: Handler;
 }
