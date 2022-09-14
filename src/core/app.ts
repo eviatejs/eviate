@@ -1,11 +1,13 @@
 import { AppState } from './state';
 import { EventHandler } from './event-handler';
 import { AppParamsSchema } from '../schema/AppParams';
-import { Serve, Server } from 'bun';
+import type { Serve } from 'bun';
 import type { Handler } from '../interfaces/data';
 import type { AppParamsInput } from '../schema/AppParams';
 import { router } from './router';
 import { Context } from './context';
+import Router from './cacheRouter';
+import type { route } from '../interfaces/cacheRoute';
 export class Engine {
   private appState: AppState;
   private eventHandler: EventHandler = new EventHandler();
@@ -28,6 +30,13 @@ export class Engine {
 
   public listen(port?: number) {
     return Bun.serve(this.serve());
+  }
+
+  public use(object: Router) {
+    object.routes.filter((val: route) => {
+      this.router.register(val.method, val.path, val.handler);
+    });
+    return;
   }
 
   private serve(): Serve {

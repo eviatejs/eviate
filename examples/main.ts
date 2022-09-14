@@ -1,15 +1,17 @@
-import { Engine } from '../src';
+import { Engine, Router } from '../src';
 
 const app = new Engine({});
-
+const router = new Router();
 app.get('/', ctx => {
   console.log(ctx.method);
   return 'Works omg';
 });
 
-app.get('/user/:name', ctx => {
-  return ctx.params.name;
+router.get('/hello', ctx => {
+  console.log(ctx.host);
+  return 'Router Works';
 });
 
+app.use(router);
 app.listen();
 //Implement logic

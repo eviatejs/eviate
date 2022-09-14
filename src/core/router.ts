@@ -21,7 +21,7 @@ export class router {
     this.notFound = handler;
   }
 
-  private register(method: string, path: string, handler: Handler) {
+  public register(method: string, path: string, handler: Handler) {
     const tree: Tree | undefined = this.routes.get(method);
     tree?.add(path, { handler: handler });
     return;
