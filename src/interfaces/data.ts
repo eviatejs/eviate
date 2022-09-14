@@ -1,3 +1,3 @@
 export interface data {
-  params: string[];
+  handler: () => string;
 }

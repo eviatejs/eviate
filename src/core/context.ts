@@ -8,11 +8,6 @@ export class Context {
   readonly headers: Request['headers'];
   readonly url: URL;
 
-  // TODO: URL parameters
-  // TODO: Body for the HTTP request
-
-  // TODO: App global state
-
   constructor(req: Request) {
     this.req = req;
 
