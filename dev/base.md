@@ -1,6 +1,6 @@
-This file contains the design document for the complete web framework. Meant for development.
-
 ## Basic App
+
+### Initializing the App
 
 ```ts
 import { Blurr } from 'blurr';
@@ -8,7 +8,7 @@ import { Blurr } from 'blurr';
 const app = new Blurr();
 ```
 
-Possible configuration:
+### Kitchen sink configuration
 
 ```ts
 import type { App } from 'blurr';
@@ -38,7 +38,7 @@ const app = new Blurr({
 });
 ```
 
-Here's how to run:
+### Run the app
 
 ```ts
 app.listen(
@@ -69,12 +69,12 @@ app.on_event('before-request', async (req: Request) => {
 });
 ```
 
-Handling errors globally:
+### Global error handler
 
 ```ts
-import type { BlurrRequest, BlurrError } from 'blurr';
+import type { Context, BlurrError } from 'blurr';
 
-app.on_error((request: BlurrRequest, error: BlurrError) => {
+app.on_error((ctx: Context, error: BlurrError) => {
   // Each error will have the route, the actual error
   // and the stack trace.
   console.log(error.route, error.message, error.stack);
@@ -85,10 +85,10 @@ app.on_error((request: BlurrRequest, error: BlurrError) => {
 
 The routes are completely free of `res`, and lets you have optional request aswell!
 
-```ts
-import { Response } from 'blurr';
+The routes remove `req`, `res` and replaces with a simple `ctx` object to make working easy.
 
-import type { BlurrRequest } from 'blurr';
+```ts
+import type { Context } from 'blurr';
 
 app.get('/health', async _ => {
   return {
@@ -98,9 +98,9 @@ app.get('/health', async _ => {
   };
 });
 
-app.get('/test', async (req: BlurrRequest) => {
+app.get('/test', async (ctx: Context) => {
   // Maybe have type-safe access to the request?
-  const { name } = req.params;
+  const { name } = ctx.params;
 
   return {
     json: {
@@ -109,7 +109,7 @@ app.get('/test', async (req: BlurrRequest) => {
   };
 });
 
-app.get('/test-500', async (req: BlurrRequest) => {
+app.get('/test-500', async (ctx: Context) => {
   return {
     response: {
       status: 500,
@@ -128,7 +128,7 @@ app.get('/test-500', async (req: BlurrRequest) => {
   };
 });
 
-app.get('/text-resp', async (req: BlurrRequest) => {
+app.get('/text-resp', async (ctx: Context) => {
   return {
     text: 'Hello world'
   };
@@ -140,8 +140,8 @@ Dynamic route parameters:
 ```ts
 app.get(
   '/test/:name',
-  async (req: BlurrRequest) => {
-    const { name } = req.params;
+  async (ctx: Context) => {
+    const { name } = ctx.params;
 
     return {
       json: {
@@ -177,8 +177,8 @@ app.get(
 
 app.post(
   '/test',
-  async (req: BlurrRequest) => {
-    const { name } = req.params;
+  async (ctx: Context) => {
+    const { name } = ctx.params;
 
     return {
       json: {
@@ -271,16 +271,6 @@ There can be a nested way to generate the URLs aswell, `v1-router.health.ping`
 
 ## Websocket routes
 
-## Templating & static files
-
 ## Middlewares
 
-## Background tasks
-
-## Versioning
-
-## Dependency injection
-
-## GraphQL
-
-## Type-safe endpoints
+## Templating & static files
