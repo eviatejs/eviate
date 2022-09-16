@@ -1,5 +1,5 @@
 import { AppState } from './state';
-import { EventHandler } from './event-handler';
+
 import { AppParamsSchema } from '../schema/AppParams';
 import type { Serve } from 'bun';
 import type { Handler } from '../interfaces/data';
@@ -8,9 +8,9 @@ import { router } from './router';
 import { Context } from './context';
 import Router from './cacheRouter';
 import type { route } from '../interfaces/cacheRoute';
+import { EngineError } from './error';
 export class Engine {
   private appState: AppState;
-  private eventHandler: EventHandler = new EventHandler();
   private router!: router;
   constructor(params: AppParamsInput) {
     const parsedParams = AppParamsSchema.safeParse(params);
@@ -29,13 +29,7 @@ export class Engine {
   }
 
   public listen(port?: number) {
-    console.log(`
-██████╗░██╗░░░░░██╗░░░██╗██████╗░██████╗░░░░░░██╗░██████╗
-██╔══██╗██║░░░░░██║░░░██║██╔══██╗██╔══██╗░░░░░██║██╔════╝
-██████╦╝██║░░░░░██║░░░██║██████╔╝██████╔╝░░░░░██║╚█████╗░
-██╔══██╗██║░░░░░██║░░░██║██╔══██╗██╔══██╗██╗░░██║░╚═══██╗
-██████╦╝███████╗╚██████╔╝██║░░██║██║░░██║╚█████╔╝██████╔╝
-╚═════╝░╚══════╝░╚═════╝░╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═════╝░`);
+    this.router.event.emit('startup');
     return Bun.serve(this.serve());
   }
 
@@ -46,11 +40,20 @@ export class Engine {
     return;
   }
 
+  public on(name: string, callback: any) {
+    this.router.on(name, callback);
+  }
+
+  public error(callback: (err: EngineError, ctx?: Context) => void) {
+    this.router.error(callback);
+  }
+
   private serve(): Serve {
     const router: router = this.router;
     return {
       //@ts-ignore
       async fetch(req: Request) {
+        router.event.emit('beforeRequest');
         const ctx: Context = new Context(req);
         const res = router.serveHandler(ctx);
         return res;
@@ -63,5 +66,9 @@ export class Engine {
       development: false,
       hostname: '0.0.0.0'
     };
+  }
+
+  public shutdown() {
+    this.router.event.emit('shutdown');
   }
 }

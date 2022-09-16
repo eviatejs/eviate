@@ -3,10 +3,12 @@ import { Tree } from './tree';
 import type { Handler } from '../interfaces/data';
 import { matchedData } from '../interfaces/match';
 import { response } from '../interfaces/response';
-
+import event, { Emitter } from 'event-emitter';
+import { EngineError } from './error';
 export class router {
   public notFound: Handler | undefined;
   public routes: Map<string, Tree>;
+  public event: Emitter;
   constructor() {
     this.routes = new Map([
       ['GET', new Tree()],
@@ -17,6 +19,7 @@ export class router {
       ['DELETE', new Tree()],
       ['PATCH', new Tree()]
     ]);
+    this.event = event();
   }
   public setNotFoundHandler(handler: Handler) {
     this.notFound = handler;
@@ -70,7 +73,30 @@ export class router {
     }
     ctx.params = data.params;
     const returnval: response = data.data.handler(ctx);
-    ctx.res = new Response(returnval.text, returnval.headers);
+    ctx.res = new Response(returnval.text || '', returnval.headers);
     return ctx.res;
+  }
+  public on(name: string, callback: any) {
+    switch (name) {
+      case 'startup': {
+        this.event.on(name, callback);
+        return;
+      }
+      case 'shutdown': {
+        this.event.on(name, callback);
+        return;
+      }
+      case 'beforeRequest': {
+        this.event.on(name, callback);
+        return;
+      }
+      default: {
+        throw new Error('Event handler only supports ...');
+      }
+    }
+  }
+
+  public error(callback: (err: EngineError, ctx?: Context) => void) {
+    this.event.on('err', callback);
   }
 }

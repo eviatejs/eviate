@@ -1,3 +1,4 @@
+import { Emitter } from 'event-emitter';
 export class Context {
   req: Request;
   res: Response | null;
@@ -8,7 +9,7 @@ export class Context {
   readonly host: string;
   readonly headers: Request['headers'];
   readonly url: URL;
-
+  private eventHandler!: Emitter;
   constructor(req: Request) {
     this.req = req;
     const url = new URL(req.url);

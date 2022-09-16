@@ -18,3 +18,6 @@ class BlurrError extends Error {
     this.originalError = originalError;
   }
 }
+export class EngineError {
+  public message!: string;
+}
