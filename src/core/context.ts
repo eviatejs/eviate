@@ -1,15 +1,20 @@
-import { Emitter } from 'event-emitter';
+import type { Emitter } from 'event-emitter';
+
 export class Context {
   req: Request;
   res: Response | null;
+
   public params: any;
+
   // HTTP-related metadata
   readonly method: string;
   readonly path: string;
   readonly host: string;
   readonly headers: Request['headers'];
   readonly url: URL;
+
   private eventHandler!: Emitter;
+
   constructor(req: Request) {
     this.req = req;
     const url = new URL(req.url);

@@ -4,16 +4,19 @@ import { Context } from './context';
 import { EngineError } from './error';
 import { AppState } from './state';
 import { AppParamsSchema } from '../schema/AppParams';
+import { AppListenParams } from '../schema/AppListenParams';
 
 import type { Serve } from 'bun';
-
-import type { Handler } from '../interfaces/data';
+import type { Emitter } from 'event-emitter';
+import type { Handler } from '../interfaces/handler';
 import type { AppParamsInput } from '../schema/AppParams';
-import type { route } from '../interfaces/cacheRoute';
+import type { AppListenParamsInput } from '../schema/AppListenParams';
+import type { Route } from '../interfaces/route';
 
 export class Engine {
   private appState: AppState;
   private router!: InternalRouter;
+  private eventEmitter: Emitter;
 
   constructor(params?: AppParamsInput) {
     const parsedParams = AppParamsSchema.safeParse({ ...params });
@@ -27,6 +30,7 @@ export class Engine {
     }
 
     this.router = new InternalRouter();
+    this.eventEmitter = this.router.event;
   }
 
   public get(path: string, handler: Handler) {
@@ -34,19 +38,27 @@ export class Engine {
   }
 
   // Move host, and debug to the extra params and use zod.
-  public listen(port: number = 3000, host: string = '127.0.0.1') {
-    this.router.event.emit('startup');
+  public listen(params?: AppListenParamsInput) {
+    const parsedParams = AppListenParams.safeParse({ ...params });
 
-    return Bun.serve(this.serve(port, host));
+    if (!parsedParams.success) {
+      throw new Error('Invalid params'); // TODO: Replace with custom errors
+    }
+
+    const { port, hostname, debug } = parsedParams.data;
+
+    this.eventEmitter.emit('startup');
+
+    return Bun.serve(this.serve(port, hostname, debug));
   }
 
-  public use(object: Router) {
-    object.routes.filter((val: route) => {
-      this.router.register(val.method, val.path, val.handler);
+  public use(router: Router) {
+    router.routes.map((value: Route) => {
+      this.router.register(value.method, value.path, value.handler);
     });
   }
 
-  public on(name: string, callback: any) {
+  public on(name: string, callback: () => void) {
     this.router.on(name, callback);
   }
 
@@ -54,10 +66,14 @@ export class Engine {
     this.router.error(callback);
   }
 
-  private serve(port: number, host: string): Serve {
+  private serve(port: number, host: string, debug: boolean): Serve {
     const router: InternalRouter = this.router;
 
     return {
+      port: port,
+      hostname: host,
+      debug: debug,
+
       // @ts-ignore
       async fetch(req: Request) {
         router.event.emit('before-request');
@@ -71,15 +87,11 @@ export class Engine {
       // @ts-ignore
       error(error: Error) {
         console.log(error);
-      },
-
-      port: port,
-      hostname: host,
-      development: false
+      }
     };
   }
 
   public shutdown() {
-    this.router.event.emit('shutdown');
+    this.eventEmitter.emit('shutdown');
   }
 }

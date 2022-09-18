@@ -1,5 +1,6 @@
-import { data } from '../interfaces/data';
 import { Node } from './node';
+
+import type { Data } from '../../interfaces/data';
 
 export class Tree {
   root: null | Node;
@@ -8,18 +9,18 @@ export class Tree {
     this.root = null;
   }
 
-  add(path: string, data: data) {
+  add(path: string, data: Data) {
     if (this.isEmpty()) {
       this.root = new Node('', '', null);
     }
 
     const fullPath = path;
-    let node = this.root;
-    //@ts-ignore
+
+    let node = this.root!;
     node.priority++;
 
     node_loop: while (node) {
-      path = path.substr(node.path.length);
+      path = path.slice(node.path.length);
 
       if (path.length === 0) {
         if (node.data) {
@@ -56,6 +57,7 @@ export class Tree {
               node.sort();
 
               node = selectedNode;
+
               continue node_loop;
               // we inject a new node, cause the new path is part of this one
             } else if (pathCompareIndex >= path.length) {
@@ -104,7 +106,7 @@ export class Tree {
     return this;
   }
 
-  appendNode(node: Node, path: string, fullPath: string, data: data) {
+  appendNode(node: Node, path: string, fullPath: string, data: Data) {
     let offset = 0;
 
     let child: Node = new Node('', '', {});

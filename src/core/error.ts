@@ -1,4 +1,4 @@
-class BlurrError extends Error {
+export class BlurrError extends Error {
   public route: string;
   public method: string;
   public originalError: Error;
@@ -18,6 +18,7 @@ class BlurrError extends Error {
     this.originalError = originalError;
   }
 }
+
 export class EngineError {
   public message!: string;
 }

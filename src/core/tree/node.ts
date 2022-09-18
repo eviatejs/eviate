@@ -1,21 +1,24 @@
-'use strict';
-import { data } from '../interfaces/data';
+import type { Data } from '../../interfaces/data';
+
 export class Node {
-  static DEFAULT: number;
-  path: string;
-  fullPath: string;
-  data: data;
-  priority: number;
-  type: number;
-  children: any;
-  static CATCHALL: number;
-  static PARAM: number;
+  public path: string;
+  public fullPath: string;
+  public data: Data;
+  public priority: number;
+  public type: number;
+  public children: any;
+
+  public static DEFAULT: number;
+  public static CATCHALL: number;
+  public static PARAM: number;
+
   constructor(path: string, fullPath: string, data: any) {
     this.path = path;
     this.fullPath = fullPath;
     this.data = data;
     this.priority = 1;
     this.type = Node.DEFAULT;
+
     this.children = [];
   }
 

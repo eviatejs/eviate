@@ -1,7 +1,7 @@
 import z from 'zod';
 
-const AppListenParams = z.object({
-  hostname: z.string().default('0.0.0.0'),
+export const AppListenParams = z.object({
+  hostname: z.string().default('127.0.0.1'),
   port: z.number().default(4000),
   debug: z.boolean().default(false)
 });

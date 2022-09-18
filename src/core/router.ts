@@ -1,8 +1,8 @@
-import type { route } from '../interfaces/cacheRoute';
-import type { Handler } from '../interfaces/data';
+import type { Route } from '../interfaces/route';
+import type { Handler } from '../interfaces/handler';
 
 export default class Router {
-  public routes: route[];
+  public routes: Route[];
 
   constructor() {
     this.routes = [];
@@ -40,8 +40,8 @@ export default class Router {
     this.register('PUT', path, handler);
   }
 
-  // Get all the routes.
-  public getRoutes(): route[] | undefined {
+  // Get all the routes
+  public getRoutes(): Route[] | undefined {
     return this.routes;
   }
 }

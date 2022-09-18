@@ -19,6 +19,7 @@
     "run": "bun run src/index.ts",
     "dev": "bun run examples/main.ts",
     "build": "tsup",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write ./**/*.{ts,json,md}",
     "release": "bumpp --commit --push --tag && npm publish",
     "prepublishOnly": "bun run build",
@@ -26,15 +27,15 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@types/event-emitter": "^0.3.3",
     "event-emitter": "^0.3.5",
-    "lint-staged": "^13.0.3",
     "zod": "^3.19.1"
   },
   "devDependencies": {
+    "@types/event-emitter": "^0.3.3",
     "bumpp": "^8.2.1",
     "bun-types": "^0.1.11",
     "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
     "tsup": "^6.2.3",
     "typescript": "^4.8.3"

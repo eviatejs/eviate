@@ -1,12 +1,12 @@
 import event, { Emitter } from 'event-emitter';
 
 import { Context } from './context';
-import { Tree } from './tree';
-import { matchedData } from '../interfaces/match';
-import { response } from '../interfaces/response';
+import { Tree } from './tree/tree';
 import { EngineError } from './error';
 
-import type { Handler } from '../interfaces/data';
+import type { Handler } from '../interfaces/handler';
+import { MatchedData } from '../interfaces/match';
+import { Response } from '../interfaces/response';
 
 export class InternalRouter {
   public event: Emitter;
@@ -66,12 +66,12 @@ export class InternalRouter {
     this.register('PUT', path, handler);
   }
 
-  private match(method: string, path: string): matchedData | null {
+  private match(method: string, path: string): MatchedData | null {
     const data = this.routes.get(method)?.find(path);
 
     if (data) {
-      const returnData: matchedData = {
-        parmas: data.params,
+      const returnData: MatchedData = {
+        params: data.params,
         handler: data.data.handler
       };
 
@@ -89,10 +89,10 @@ export class InternalRouter {
     }
 
     ctx.params = data.params;
-    const returnValue: response = data.data.handler(ctx);
+    const returnValue: Response = data.data.handler(ctx);
 
     ctx.res = new Response(returnValue.text || '', returnValue.headers);
-    return ctx.res;
+    return ctx.res; // FIXME: throws an error
   }
 
   public on(name: string, callback: any) {
@@ -101,14 +101,17 @@ export class InternalRouter {
         this.event.on(name, callback);
         return;
       }
+
       case 'shutdown': {
         this.event.on(name, callback);
         return;
       }
+
       case 'before-request': {
         this.event.on(name, callback);
         return;
       }
+
       default: {
         throw new Error('Event handler only supports ...');
       }
