@@ -6,7 +6,7 @@ import { EngineError } from './error';
 
 import type { Handler } from '../interfaces/handler';
 import { MatchedData } from '../interfaces/match';
-import { Response } from '../interfaces/response';
+import { response } from '../interfaces/response';
 
 export class InternalRouter {
   public event: Emitter;
@@ -89,7 +89,7 @@ export class InternalRouter {
     }
 
     ctx.params = data.params;
-    const returnValue: Response = data.data.handler(ctx);
+    const returnValue: response = data.data.handler(ctx);
 
     ctx.res = new Response(returnValue.text || '', returnValue.headers);
     return ctx.res; // FIXME: throws an error

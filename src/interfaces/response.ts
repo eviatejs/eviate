@@ -1,4 +1,4 @@
-export interface Response {
+export interface response {
   status?: Number;
   text?: string;
   json?: {};

@@ -37,4 +37,4 @@ router.get('/hello', ctx => {
 // Implement the router
 app.use(router);
 
-app.listen(3000);
+app.listen({ port: 3000 });
