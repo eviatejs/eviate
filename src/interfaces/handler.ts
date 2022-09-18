@@ -1,4 +1,4 @@
 import type { Context } from '../core/context';
-import { Response } from './response';
+import { response } from './response';
 
-export type Handler = (ctx: Context) => Response;
+export type Handler = (ctx: Context) => response;

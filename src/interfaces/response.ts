@@ -1,3 +1,5 @@
+import type { Context } from '../core/context';
+
 export interface response {
   status?: Number;
   text?: string;
@@ -6,4 +8,5 @@ export interface response {
   headers?: {};
   interface?: any;
   Blob?: Blob;
+  ctx?: Context;
 }
