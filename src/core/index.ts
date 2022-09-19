@@ -1,4 +1,4 @@
 import { Engine } from './app';
-import Router from './router';
+import Router from './router/router';
 
 export { Engine, Router };

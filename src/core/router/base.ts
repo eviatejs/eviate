@@ -1,16 +1,7 @@
-import type { Route } from '../interfaces/route';
-import type { Handler } from '../interfaces/handler';
+import type { Handler } from '../../interfaces/handler';
 
-export default class Router {
-  public routes: Route[];
-
-  constructor() {
-    this.routes = [];
-  }
-
-  private register(method: string, path: string, handler: Handler) {
-    this.routes.push({ method: method, path: path, handler: handler });
-  }
+export abstract class BaseRouter {
+  abstract register(method: string, path: string, handler: Handler): void;
 
   public get(path: string, handler: Handler) {
     this.register('GET', path, handler);
@@ -38,10 +29,5 @@ export default class Router {
 
   public put(path: string, handler: Handler) {
     this.register('PUT', path, handler);
-  }
-
-  // Get all the routes
-  public getRoutes(): Route[] | undefined {
-    return this.routes;
   }
 }

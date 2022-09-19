@@ -1,20 +1,31 @@
 import event, { Emitter } from 'event-emitter';
 
-import { Context } from './context';
-import { Tree } from './tree/tree';
-import { EngineError } from './error';
+import { BaseRouter } from './base';
+import { Context } from '../context';
+import { Tree } from '../tree/tree';
+import { EngineError } from '../error';
 
-import type { Handler } from '../interfaces/handler';
-import { MatchedData } from '../interfaces/match';
-import { response } from '../interfaces/response';
+import type { Handler } from '../../interfaces/handler';
+import type { MatchedData } from '../../interfaces/match';
+import type { BlurrResponse } from '../../interfaces/response';
 
-export class InternalRouter {
+enum RouterEvent {
+  Startup = 'startup',
+  Shutdown = 'shutdown',
+  BeforeRequest = 'before-request'
+}
+
+const allRouterEvents = '- ' + Object.values(RouterEvent).join('\n- ');
+
+export class InternalRouter extends BaseRouter {
   public event: Emitter;
 
   public notFound: Handler | undefined;
   public routes: Map<string, Tree>;
 
   constructor() {
+    super();
+
     this.routes = new Map([
       ['GET', new Tree()],
       ['POST', new Tree()],
@@ -28,42 +39,14 @@ export class InternalRouter {
     this.event = event();
   }
 
-  public setNotFoundHandler(handler: Handler) {
-    this.notFound = handler;
-  }
-
   public register(method: string, path: string, handler: Handler) {
     const tree: Tree | undefined = this.routes.get(method);
 
     tree?.add(path, { handler: handler });
   }
 
-  public get(path: string, handler: Handler) {
-    this.register('GET', path, handler);
-  }
-
-  public post(path: string, handler: Handler) {
-    this.register('POST', path, handler);
-  }
-
-  public patch(path: string, handler: Handler) {
-    this.register('PATCH', path, handler);
-  }
-
-  public delete(path: string, handler: Handler) {
-    this.register('DELETE', path, handler);
-  }
-
-  public options(path: string, handler: Handler) {
-    this.register('OPTIONS', path, handler);
-  }
-
-  public head(path: string, handler: Handler) {
-    this.register('HEAD', path, handler);
-  }
-
-  public put(path: string, handler: Handler) {
-    this.register('PUT', path, handler);
+  public setNotFoundHandler(handler: Handler) {
+    this.notFound = handler;
   }
 
   private match(method: string, path: string): MatchedData | null {
@@ -89,32 +72,28 @@ export class InternalRouter {
     }
 
     ctx.params = data.params;
-    const returnValue: response = data.data.handler(ctx);
+    const returnValue: BlurrResponse = data.data.handler(ctx);
 
     ctx.res = new Response(returnValue.text || '', returnValue.headers);
-    return ctx.res; // FIXME: throws an error
+    return ctx.res;
   }
 
   public on(name: string, callback: any) {
     switch (name) {
-      case 'startup': {
+      case RouterEvent.Startup:
         this.event.on(name, callback);
         return;
-      }
 
-      case 'shutdown': {
+      case RouterEvent.Shutdown:
         this.event.on(name, callback);
         return;
-      }
 
-      case 'before-request': {
+      case RouterEvent.BeforeRequest:
         this.event.on(name, callback);
         return;
-      }
 
-      default: {
-        throw new Error('Event handler only supports ...');
-      }
+      default:
+        throw new Error(`Event handler supports only:\n${allRouterEvents}`);
     }
   }
 

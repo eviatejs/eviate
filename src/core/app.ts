@@ -1,5 +1,5 @@
-import Router from './router';
-import { InternalRouter } from './internal-router';
+import Router from './router/router';
+import { InternalRouter } from './router/internal-router';
 import { Context } from './context';
 import { EngineError } from './error';
 import { AppState } from './state';
