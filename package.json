@@ -20,7 +20,7 @@
     "dev": "bun run examples/main.ts",
     "build": "tsup",
     "typecheck": "tsc --noEmit",
-    "format": "prettier --write ./**/*.{ts,json,md}",
+    "format": "prettier --write ./**/*/**.{ts,json,md}",
     "release": "bumpp --commit --push --tag && npm publish",
     "prepublishOnly": "bun run build",
     "test": "bun wiptest",

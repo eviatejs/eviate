@@ -8,6 +8,7 @@ import { EngineError } from '../error';
 import type { Handler } from '../../interfaces/handler';
 import type { MatchedData } from '../../interfaces/match';
 import type { BlurrResponse } from '../../interfaces/response';
+import { routeMount } from '../../utils/router-logger';
 
 enum RouterEvent {
   Startup = 'startup',
@@ -19,13 +20,11 @@ const allRouterEvents = '- ' + Object.values(RouterEvent).join('\n- ');
 
 export class InternalRouter extends BaseRouter {
   public event: Emitter;
-
   public notFound: Handler | undefined;
   public routes: Map<string, Tree>;
 
   constructor() {
     super();
-
     this.routes = new Map([
       ['GET', new Tree()],
       ['POST', new Tree()],
@@ -43,6 +42,7 @@ export class InternalRouter extends BaseRouter {
     const tree: Tree | undefined = this.routes.get(method);
 
     tree?.add(path, { handler: handler });
+    routeMount(method, path);
   }
 
   public setNotFoundHandler(handler: Handler) {

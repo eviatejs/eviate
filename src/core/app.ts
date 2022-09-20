@@ -32,10 +32,35 @@ export class Engine {
 
     this.router = new InternalRouter();
     this.eventEmitter = this.router.event;
+    startupBanner();
   }
 
   public get(path: string, handler: Handler) {
     this.router.get(path, handler);
+  }
+
+  public put(path: string, handler: Handler) {
+    this.router.put(path, handler);
+  }
+
+  public patch(path: string, handler: Handler) {
+    this.router.patch(path, handler);
+  }
+
+  public delete(path: string, handler: Handler) {
+    this.router.delete(path, handler);
+  }
+
+  public head(path: string, handler: Handler) {
+    this.router.head(path, handler);
+  }
+
+  public options(path: string, handler: Handler) {
+    this.router.options(path, handler);
+  }
+
+  public post(path: string, handler: Handler) {
+    this.router.post(path, handler);
   }
 
   // Move host, and debug to the extra params and use zod.
@@ -48,7 +73,6 @@ export class Engine {
 
     const { port, hostname, debug } = parsedParams.data;
 
-    startupBanner();
     this.eventEmitter.emit('startup');
 
     return Bun.serve(this.serve(port, hostname, debug));

@@ -5,10 +5,8 @@ import type { Handler } from '../../interfaces/handler';
 
 export default class Router extends BaseRouter {
   public routes: Route[];
-
   constructor() {
     super();
-
     this.routes = [];
   }
 

@@ -26,12 +26,30 @@ app.get('/', ctx => {
     text: 'Hi'
   };
 });
-
 // Router routes
-router.get('/hello', ctx => {
+router.post('/hello', ctx => {
   console.log(ctx.host);
-
   return { text: 'Router Works' };
+});
+
+app.put('/put', ctx => {
+  return {};
+});
+
+app.delete('/delete', ctx => {
+  return {};
+});
+
+app.head('/head', ctx => {
+  return {};
+});
+
+app.options('/options', ctx => {
+  return {};
+});
+
+app.patch('/patch', ctx => {
+  return {};
 });
 
 // Implement the router
