@@ -12,11 +12,7 @@ const osTypeMap: Record<string, any> = {
 };
 
 const banner = `
-   ___  __
-  / _ )/ /_ __________
- / _  / / // / __/ __/
-/____/_/\_,_/_/ /_/
-
+  
 v${packageJson.version} | Running on ${osTypeMap[os.type()]}
 `;
 

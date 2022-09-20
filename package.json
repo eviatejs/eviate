@@ -1,6 +1,6 @@
 {
-  "name": "blurr",
-  "version": "0.1.0",
+  "name": "evia",
+  "version": "0.0.1",
   "description": "Next-gen web framework for bun.js",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
