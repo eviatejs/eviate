@@ -16,6 +16,7 @@ const banner = `
   / __/  __(_)___
  / _/| |/ / / _ /
 /___/|___/_/\_,_/ 
+
 v${packageJson.version} | Running on ${osTypeMap[os.type()]}
 `;
 
