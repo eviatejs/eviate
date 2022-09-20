@@ -3,6 +3,7 @@ import { InternalRouter } from './router/internal-router';
 import { Context } from './context';
 import { EngineError } from './error';
 import { AppState } from './state';
+import { startupBanner } from '../utils/startup-banner';
 import { AppParamsSchema } from '../schema/AppParams';
 import { AppListenParams } from '../schema/AppListenParams';
 
@@ -47,6 +48,7 @@ export class Engine {
 
     const { port, hostname, debug } = parsedParams.data;
 
+    startupBanner();
     this.eventEmitter.emit('startup');
 
     return Bun.serve(this.serve(port, hostname, debug));

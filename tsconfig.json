@@ -11,7 +11,7 @@
     // Output JS type
 
     // Directories
-    "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "./dist",
 
     // stricter type-checking for stronger correctness. Recommended by TS
