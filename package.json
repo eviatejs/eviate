@@ -1,7 +1,7 @@
 {
-  "name": "evia",
+  "name": "eviate",
   "version": "0.0.1",
-  "description": "Next-gen web framework for bun.js",
+  "description": "Next-gen web framework for bun.js and node.js",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
