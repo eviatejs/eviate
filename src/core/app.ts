@@ -10,25 +10,31 @@ import { AppListenParams } from '../schema/AppListenParams';
 import type { Serve } from 'bun';
 import type { Emitter } from 'event-emitter';
 import type { Handler } from '../interfaces/handler';
-import type { AppParamsInput } from '../schema/AppParams';
+import type { AppParamsInput, AppMetadata } from '../schema/AppParams';
 import type { AppListenParamsInput } from '../schema/AppListenParams';
 import type { Route } from '../interfaces/route';
 
 export class Engine {
+  public metadata: AppMetadata;
+
   private appState: AppState;
   private router!: InternalRouter;
   private eventEmitter: Emitter;
 
   constructor(params?: AppParamsInput) {
-    const parsedParams = AppParamsSchema.safeParse({ ...params });
+    try {
+      const { state, metadata } = AppParamsSchema.parse(params);
 
-    if (!parsedParams.success) {
-      this.appState = new AppState({});
-    } else {
-      const { state } = parsedParams.data;
+      this.metadata = metadata;
+      this.appState = new AppState(state);
+    } catch (optionParseError) {
+      const { state, metadata } = AppParamsSchema.parse({});
 
+      this.metadata = metadata;
       this.appState = new AppState(state);
     }
+
+    console.log(this.metadata);
 
     this.router = new InternalRouter();
     this.eventEmitter = this.router.event;
