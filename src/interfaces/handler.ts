@@ -1,4 +1,4 @@
 import type { Context } from '../core/context';
-import { BlurrResponse } from './response';
+import { EviateResponse } from './response';
 
-export type Handler = (ctx: Context) => BlurrResponse;
+export type Handler = (ctx: Context) => EviateResponse;

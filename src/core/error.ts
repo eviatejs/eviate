@@ -1,4 +1,4 @@
-export class BlurrError extends Error {
+export class EviateError extends Error {
   public route: string;
   public method: string;
   public originalError: Error;
@@ -11,7 +11,7 @@ export class BlurrError extends Error {
   ) {
     super(message);
 
-    this.name = 'BlurrError';
+    this.name = 'EviateError';
 
     this.route = route;
     this.method = method;

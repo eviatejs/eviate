@@ -7,7 +7,7 @@ import { EngineError } from '../error';
 
 import type { Handler } from '../../interfaces/handler';
 import type { MatchedData } from '../../interfaces/match';
-import type { BlurrResponse } from '../../interfaces/response';
+import type { EviateResponse } from '../../interfaces/response';
 import { routeMount } from '../../utils/router-logger';
 
 enum RouterEvent {
@@ -72,7 +72,7 @@ export class InternalRouter extends BaseRouter {
     }
 
     ctx.params = data.params;
-    const returnValue: BlurrResponse = data.data.handler(ctx);
+    const returnValue: EviateResponse = data.data.handler(ctx);
 
     ctx.res = new Response(returnValue.text || '', returnValue.headers);
     return ctx.res;

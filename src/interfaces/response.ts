@@ -1,6 +1,6 @@
 import type { Context } from '../core/context';
 
-export interface BlurrResponse {
+export interface EviateResponse {
   status?: Number;
   text?: string;
   json?: {};

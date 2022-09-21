@@ -43,14 +43,14 @@
     "typescript": "^4.8.3"
   },
   "keywords": [],
-  "author": "BlurrJS team",
+  "author": "EviateJS team",
   "license": "MIT",
-  "homepage": "https://github.com/blurrjs/blurr",
+  "homepage": "https://github.com/eviatejs/eviate",
   "bugs": {
-    "url": "https://github.com/blurrjs/blurr/issues"
+    "url": "https://github.com/eviatejs/eviate/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blurrjs/blurr.git"
+    "url": "git+https://github.com/eviatejs/eviate.git"
   }
 }

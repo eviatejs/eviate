@@ -1,9 +1,9 @@
 The plugin would be based off a class for maximising the functionality.
 
 ```ts
-import { Plugin, route } from 'blurr-plugin';
+import { Plugin, route } from 'eviate-plugin';
 
-import type { PluginSettings, PluginError, PluginEvent } from 'blurr-plugin';
+import type { PluginSettings, PluginError, PluginEvent } from 'eviate-plugin';
 
 class MyPlugin extends Plugin {
   constructor() {
@@ -58,11 +58,11 @@ class MyPlugin extends Plugin {
 Once plugin is ready, it can be loaded using:
 
 ```ts
-import { Blurr } from 'blurr';
+import { Eviate } from 'eviate';
 
 import { MyPlugin } from './my-plugin';
 
-const app = new Blurr();
+const app = new Eviate();
 
 app.plugins.load(new MyPlugin());
 ```

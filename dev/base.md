@@ -3,19 +3,19 @@
 ### Initializing the App
 
 ```ts
-import { Blurr } from 'blurr';
+import { Eviate } from 'eviate';
 
-const app = new Blurr();
+const app = new Eviate();
 ```
 
 ### Kitchen sink configuration
 
 ```ts
-import type { App } from 'blurr';
+import type { App } from 'eviate';
 
 const db = new Database();
 
-const app = new Blurr({
+const app = new Eviate({
   // The types in the state are preserved. Figure out a way to achieve so
   state: {
     name: 'John Doe',
@@ -29,7 +29,7 @@ const app = new Blurr({
   // For autodocs, use OpenAPI schema,
   openapi: (app: App) => {
     return {
-      title: 'Blurr',
+      title: 'Eviate',
       version: '1.0.0',
       description: 'A web framework for Bun',
       routes: app.routes
@@ -72,9 +72,9 @@ app.on_event('before-request', async (req: Request) => {
 ### Global error handler
 
 ```ts
-import type { Context, BlurrError } from 'blurr';
+import type { Context, EviateError } from 'eviate';
 
-app.on_error((ctx: Context, error: BlurrError) => {
+app.on_error((ctx: Context, error: EviateError) => {
   // Each error will have the route, the actual error
   // and the stack trace.
   console.log(error.route, error.message, error.stack);
@@ -88,7 +88,7 @@ The routes are completely free of `res`, and lets you have optional request aswe
 The routes remove `req`, `res` and replaces with a simple `ctx` object to make working easy.
 
 ```ts
-import type { Context } from 'blurr';
+import type { Context } from 'eviate';
 
 app.get('/health', async _ => {
   return {
@@ -244,7 +244,7 @@ app.get('/redirect', async _ => {
 ## Routers/Blueprints to organize the filesystem
 
 ```ts
-import { Router } from 'blurr';
+import { Router } from 'eviate';
 
 const router = new Router({
   name: 'health-router',
@@ -263,7 +263,7 @@ router.get('/', async _ => {
 app.register(router);
 ```
 
-The root router created when making a Blurr app is as so - `new Router('root')`.
+The root router created when making a Eviate app is as so - `new Router('root')`.
 
 No URL prefixes or colliding names. Also, note that, router is going to be used for routing, the root router URLs can be accessed by `app.url_for('my-route')`, and others as, `app.url_for('router-name.my-route')`.
 
