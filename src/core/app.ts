@@ -16,6 +16,11 @@ import type { AppListenParamsInput } from '../schema/AppListenParams';
 import type { Route } from '../interfaces/route';
 import type { EviateMiddlewareResponse } from '../interfaces/response';
 
+export enum MiddlewarePosition {
+  Before = 'before',
+  After = 'after'
+}
+
 export class Engine {
   public metadata: AppMetadata;
 
@@ -96,23 +101,23 @@ export class Engine {
     });
   }
 
-  public on(name: string, callback: () => void) {
-    this.router.on(name, callback);
-  }
-
-  public use(pos: string, context: MiddlewareHandler) {
+  public use(pos: string | MiddlewarePosition, context: MiddlewareHandler) {
     switch (pos) {
-      case 'start':
+      case MiddlewarePosition.Before:
         this.middleware.register(0, context);
         return;
 
-      case 'end':
+      case MiddlewarePosition.After:
         this.middleware.register(1, context);
         return;
 
       default:
-        throw new Error('Sunrit implement this lol');
+        throw new Error('Invalid middleware position.');
     }
+  }
+
+  public on(name: string, callback: () => void) {
+    this.router.on(name, callback);
   }
 
   public error(callback: (err: EngineError, ctx?: Context) => void) {
