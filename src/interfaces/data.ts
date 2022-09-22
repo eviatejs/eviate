@@ -1,5 +1,5 @@
-import { Handler } from './handler';
+import { handler } from './handler';
 
 export interface Data {
-  handler: Handler;
+  handler: handler;
 }

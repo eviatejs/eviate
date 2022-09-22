@@ -3,7 +3,7 @@ import { BaseRouter } from './base';
 import { Context } from '../context';
 import { Tree } from '../tree/tree';
 import { EngineError } from '../error';
-import type { Handler } from '../../interfaces/handler';
+import type { handler } from '../../interfaces/handler';
 import type { MatchedData } from '../../interfaces/match';
 import type { EviateResponse } from '../../interfaces/response';
 import { routeMount } from '../../utils/router-logger';
@@ -18,7 +18,7 @@ const allRouterEvents = '- ' + Object.values(RouterEvent).join('\n- ');
 
 export class InternalRouter extends BaseRouter {
   public event: Emitter;
-  public notFound: Handler | undefined;
+  public notFound: handler | undefined;
   public routes: Map<string, Tree>;
 
   constructor() {
@@ -36,14 +36,14 @@ export class InternalRouter extends BaseRouter {
     this.event = event();
   }
 
-  public register(method: string, path: string, handler: Handler) {
+  public register(method: string, path: string, handler: handler) {
     const tree: Tree | undefined = this.routes.get(method);
 
     tree?.add(path, { handler: handler });
     routeMount(method, path);
   }
 
-  public setNotFoundHandler(handler: Handler) {
+  public setNotFoundHandler(handler: handler) {
     this.notFound = handler;
   }
 
