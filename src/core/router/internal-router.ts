@@ -62,13 +62,21 @@ export class InternalRouter extends BaseRouter {
     return null;
   }
 
-  public serveHandler(ctx: Context): Response | null {
-    const data = this.match(ctx.method, ctx.path);
+  public serveHandler(
+    ctx: Context,
+    headers: { [key: string]: string }
+  ): Response | null {
+    const data = this.routes.get(ctx.method)?.find(ctx.path);
     if (!data) {
       return null;
     }
     ctx.params = data.params;
-    const returnValue: EviateResponse = data.handler(ctx);
+    const returnValue: EviateResponse = data.data.handler(ctx);
+    if (!returnValue.headers) returnValue.headers = {};
+    for (const header in headers) {
+      returnValue.headers[header] = headers[header];
+    }
+
     if (returnValue.text !== undefined && returnValue.json !== undefined) {
       throw new Error("You can't send both text and json object as response");
     }
@@ -112,7 +120,7 @@ export class InternalRouter extends BaseRouter {
           return ctx.res;
       }
     }
-
+    console.log(returnValue.headers);
     return ctx.res;
   }
 

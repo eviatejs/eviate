@@ -1,5 +1,6 @@
 import { Engine, Router } from '../src';
 import { Context } from '../src/core/context';
+import { EviateResponse } from '../src/interfaces/response';
 
 const app = new Engine();
 const router = new Router();
@@ -27,7 +28,8 @@ app.error((err, ctx) => {
 app.get('/', ctx => {
   console.log(ctx.method);
   return {
-    text: 'Hi'
+    text: 'Hi',
+    headers: { a: 'xyz' }
   };
 });
 // Router routes
@@ -58,9 +60,19 @@ app.patch('/patch', ctx => {
 
 // Implement the router
 app.register(router);
-app.use('start', (ctx: Context): Context => {
-  console.log(ctx.path);
-  return ctx;
+app.use('start', (ctx: Context): any => {
+  console.log(ctx.path, ctx.method);
+  return {
+    ctx: ctx,
+    header: { b: 'urmom' }
+  };
+});
+app.use('start', (ctx: Context): any => {
+  console.log(ctx.path, ctx.method);
+  return {
+    ctx: ctx,
+    header: { c: 'no' }
+  };
 });
 
 app.listen({ port: 4000 });

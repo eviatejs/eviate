@@ -13,6 +13,7 @@ import type { AppParamsInput, AppMetadata } from '../schema/AppParams';
 import type { AppListenParamsInput } from '../schema/AppListenParams';
 import type { Route } from '../interfaces/route';
 import { Middleware, MiddlewareHandler } from './middlewares';
+import { EviateMiddlewareResponse } from '../interfaces/response';
 export class Engine {
   public metadata: AppMetadata;
 
@@ -125,8 +126,8 @@ export class Engine {
         router.event.emit('before-request');
 
         let ctx: Context = new Context(req);
-        ctx = await middleware.runBefore(ctx);
-        const res = router.serveHandler(ctx);
+        const resp: EviateMiddlewareResponse = await middleware.runBefore(ctx);
+        const res = router.serveHandler(resp.ctx, resp.header || {});
         middleware.runAfter(ctx);
         return res;
       },

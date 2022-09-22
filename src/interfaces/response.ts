@@ -8,5 +8,10 @@ export interface EviateResponse {
   headers?: { [key: string]: string };
   interface?: any;
   Blob?: Blob;
-  ctx?: Context;
+}
+
+export interface EviateMiddlewareResponse {
+  status?: number;
+  header?: { [key: string]: string };
+  ctx: Context;
 }
