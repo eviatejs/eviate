@@ -64,15 +64,55 @@ export class InternalRouter extends BaseRouter {
 
   public serveHandler(ctx: Context): Response | null {
     const data = this.match(ctx.method, ctx.path);
-
     if (!data) {
       return null;
     }
-
     ctx.params = data.params;
     const returnValue: EviateResponse = data.handler(ctx);
+    if (returnValue.text !== undefined && returnValue.json !== undefined) {
+      throw new Error("You can't send both text and json object as response");
+    }
+    if (returnValue.error) {
+      return new Response(JSON.stringify(returnValue.error) || '', {
+        headers: returnValue.headers,
+        status: returnValue.status || 404
+      });
+    }
+    if (returnValue.headers) {
+      switch (returnValue.headers['Content-type']) {
+        case 'application/json':
+          ctx.res = new Response(JSON.stringify(returnValue.json) || '', {
+            headers: returnValue.headers,
+            status: returnValue.status || 200
+          });
+          return ctx.res;
 
-    ctx.res = new Response(returnValue.text || '', returnValue.headers);
+        case 'text/plain; charset=UTF-8':
+          ctx.res = new Response(returnValue.text || '', {
+            headers: returnValue.headers,
+            status: returnValue.status || 200
+          });
+          return ctx.res;
+
+        case 'application/octet-stream':
+          ctx.res = new Response(returnValue.Blob || '', {
+            headers: returnValue.headers,
+            status: returnValue.status || 200
+          });
+          return ctx.res;
+
+        default:
+          ctx.res = new Response(
+            returnValue.interface ||
+              returnValue.json ||
+              returnValue.Blob ||
+              returnValue.text,
+            { headers: returnValue.headers, status: returnValue.status || 200 }
+          );
+          return ctx.res;
+      }
+    }
+
     return ctx.res;
   }
 

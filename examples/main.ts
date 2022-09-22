@@ -1,4 +1,5 @@
 import { Engine, Router } from '../src';
+import { Context } from '../src/core/context';
 
 const app = new Engine();
 const router = new Router();
@@ -25,7 +26,6 @@ app.error((err, ctx) => {
 // App routes
 app.get('/', ctx => {
   console.log(ctx.method);
-
   return {
     text: 'Hi'
   };
@@ -57,6 +57,10 @@ app.patch('/patch', ctx => {
 });
 
 // Implement the router
-app.use(router);
+app.register(router);
+app.use('start', (ctx: Context): Context => {
+  console.log(ctx.path);
+  return ctx;
+});
 
 app.listen({ port: 4000 });

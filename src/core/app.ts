@@ -12,14 +12,14 @@ import type { Handler } from '../interfaces/handler';
 import type { AppParamsInput, AppMetadata } from '../schema/AppParams';
 import type { AppListenParamsInput } from '../schema/AppListenParams';
 import type { Route } from '../interfaces/route';
-
+import { Middleware, MiddlewareHandler } from './middlewares';
 export class Engine {
   public metadata: AppMetadata;
 
   private appState: AppState;
   private router!: InternalRouter;
   private eventEmitter: Emitter;
-
+  private middleware: Middleware;
   constructor(params?: AppParamsInput) {
     try {
       const { state, metadata } = AppParamsSchema.parse(params);
@@ -34,7 +34,7 @@ export class Engine {
     }
 
     console.log(this.metadata);
-
+    this.middleware = new Middleware();
     this.router = new InternalRouter();
     this.eventEmitter = this.router.event;
     startupBanner();
@@ -83,7 +83,7 @@ export class Engine {
     return Bun.serve(this.serve(port, hostname, debug));
   }
 
-  public use(router: Router) {
+  public register(router: Router) {
     router.routes.map((value: Route) => {
       this.router.register(value.method, value.path, value.handler);
     });
@@ -93,13 +93,28 @@ export class Engine {
     this.router.on(name, callback);
   }
 
+  public use(posi: string, context: MiddlewareHandler) {
+    switch (posi) {
+      case 'start':
+        this.middleware.register(0, context);
+        return;
+
+      case 'end':
+        this.middleware.register(1, context);
+        return;
+
+      default:
+        throw new Error('Sunrit implement this lol');
+    }
+  }
+
   public error(callback: (err: EngineError, ctx?: Context) => void) {
     this.router.error(callback);
   }
 
   private serve(port: number, host: string, debug: boolean): Serve {
     const router: InternalRouter = this.router;
-
+    const middleware: Middleware = this.middleware;
     return {
       port: port,
       hostname: host,
@@ -109,9 +124,10 @@ export class Engine {
       async fetch(req: Request) {
         router.event.emit('before-request');
 
-        const ctx: Context = new Context(req);
+        let ctx: Context = new Context(req);
+        ctx = await middleware.runBefore(ctx);
         const res = router.serveHandler(ctx);
-
+        middleware.runAfter(ctx);
         return res;
       },
 
@@ -124,5 +140,6 @@ export class Engine {
 
   public shutdown() {
     this.eventEmitter.emit('shutdown');
+    process.exit();
   }
 }

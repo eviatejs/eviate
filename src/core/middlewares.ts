@@ -2,7 +2,7 @@ import { MiddlewarePosition } from '../enums/MiddlewarePosition';
 
 import type { Context } from '../core/context';
 
-interface MiddlewareHandler {
+export interface MiddlewareHandler {
   (ctx: Context): Context | Promise<Context>;
 }
 
@@ -23,7 +23,7 @@ export class Middleware {
   }
 
   // Run the before middleware functions
-  private async runBefore(ctx: Context): Promise<Context> {
+  public async runBefore(ctx: Context): Promise<Context> {
     for (const handler of this.before) {
       ctx = await handler(ctx);
     }
@@ -32,7 +32,7 @@ export class Middleware {
   }
 
   // Run the after middleware functions
-  private async runAfter(ctx: Context): Promise<Context> {
+  public async runAfter(ctx: Context): Promise<Context> {
     for (const handler of this.after) {
       ctx = await handler(ctx);
     }
