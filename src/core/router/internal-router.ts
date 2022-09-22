@@ -63,14 +63,14 @@ export class InternalRouter extends BaseRouter {
   }
 
   public serveHandler(ctx: Context): Response | null {
-    const data = this.routes.get(ctx.method)?.find(ctx.path);
+    const data = this.match(ctx.method, ctx.path);
 
     if (!data) {
       return null;
     }
 
     ctx.params = data.params;
-    const returnValue: EviateResponse = data.data.handler(ctx);
+    const returnValue: EviateResponse = data.handler(ctx);
 
     ctx.res = new Response(returnValue.text || '', returnValue.headers);
     return ctx.res;
