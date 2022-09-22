@@ -1,6 +1,6 @@
 {
   "name": "eviate",
-  "version": "0.0.2",
+  "version": "0.1.0-alpha.1",
   "description": "Next-gen web framework for bun.js and node.js",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -20,7 +20,7 @@
     "dev": "bun run examples/main.ts",
     "build": "tsup",
     "typecheck": "tsc --noEmit",
-    "format": "prettier --write ./**/*/**/**.{ts,json,md}",
+    "format": "prettier --write ./**/*.{ts,json,md}",
     "release": "bumpp --commit --push --tag && npm publish",
     "prepublishOnly": "bun run build",
     "test": "bun wiptest",

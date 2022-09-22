@@ -13,10 +13,6 @@ app.on('before-request', () => {
   console.log('Running pre request function');
 });
 
-// app.on('unsupported-method', () => {
-//   console.log('Unsupported method');
-// });
-
 // Error handler
 app.error((err, ctx) => {
   console.log(err.message);
@@ -31,43 +27,49 @@ app.get('/', ctx => {
     headers: { a: 'xyz' }
   };
 });
+
 // Router routes
 router.post('/hello', ctx => {
   console.log(ctx.host);
+
   return { text: 'Router Works' };
 });
 
-app.put('/put', ctx => {
+app.put('/put', _ => {
   return {};
 });
 
-app.delete('/delete', ctx => {
+app.delete('/delete', _ => {
   return {};
 });
 
-app.head('/head', ctx => {
+app.head('/head', _ => {
   return {};
 });
 
-app.options('/options', ctx => {
+app.options('/options', _ => {
   return {};
 });
 
-app.patch('/patch', ctx => {
+app.patch('/patch', _ => {
   return {};
 });
 
 // Implement the router
-app.register(router);
+app.mount(router);
+
 app.use('start', (ctx: Context): any => {
   console.log(ctx.path, ctx.method);
+
   return {
     ctx: ctx,
-    header: { b: 'urmom' }
+    header: { b: 'def' }
   };
 });
+
 app.use('start', (ctx: Context): any => {
   console.log(ctx.path, ctx.method);
+
   return {
     ctx: ctx,
     header: { c: 'no' }
