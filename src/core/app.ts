@@ -6,11 +6,11 @@ import { AppState } from './state';
 import { startupBanner } from '../utils/startup-banner';
 import { AppParamsSchema } from '../schema/AppParams';
 import { AppListenParams } from '../schema/AppListenParams';
-import { Middleware, MiddlewareHandler } from './middlewares';
-
+import { Middleware } from './middlewares';
+import { MiddlewareHandler } from '../interfaces';
 import type { Serve } from 'bun';
 import type { Emitter } from 'event-emitter';
-import type { Handler } from '../interfaces/handler';
+import type { handler } from '../interfaces/handler';
 import type { AppParamsInput, AppMetadata } from '../schema/AppParams';
 import type { AppListenParamsInput } from '../schema/AppListenParams';
 import type { Route } from '../interfaces/route';
@@ -49,31 +49,31 @@ export class Engine {
     startupBanner();
   }
 
-  public get(path: string, handler: Handler) {
+  public get(path: string, handler: handler) {
     this.router.get(path, handler);
   }
 
-  public put(path: string, handler: Handler) {
+  public put(path: string, handler: handler) {
     this.router.put(path, handler);
   }
 
-  public patch(path: string, handler: Handler) {
+  public patch(path: string, handler: handler) {
     this.router.patch(path, handler);
   }
 
-  public delete(path: string, handler: Handler) {
+  public delete(path: string, handler: handler) {
     this.router.delete(path, handler);
   }
 
-  public head(path: string, handler: Handler) {
+  public head(path: string, handler: handler) {
     this.router.head(path, handler);
   }
 
-  public options(path: string, handler: Handler) {
+  public options(path: string, handler: handler) {
     this.router.options(path, handler);
   }
 
-  public post(path: string, handler: Handler) {
+  public post(path: string, handler: handler) {
     this.router.post(path, handler);
   }
 

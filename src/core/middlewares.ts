@@ -2,10 +2,7 @@ import { MiddlewarePosition } from '../enums/MiddlewarePosition';
 
 import type { Context } from '../core/context';
 import { EviateMiddlewareResponse } from '../interfaces/response';
-
-export interface MiddlewareHandler {
-  (ctx: Context): EviateMiddlewareResponse | Promise<EviateMiddlewareResponse>;
-}
+import { MiddlewareHandler } from '../interfaces';
 
 export class Middleware {
   private before: MiddlewareHandler[] = [];

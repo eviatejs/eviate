@@ -1,7 +1,7 @@
-import { Handler } from './handler';
+import { handler } from './handler';
 
 export interface Route {
   method: string;
   path: string;
-  handler: Handler;
+  handler: handler;
 }

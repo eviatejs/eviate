@@ -1,4 +1,4 @@
-import { Engine, Router } from '../src';
+import { Engine, Router } from '../src/core';
 import { Context } from '../src/core/context';
 
 const app = new Engine();

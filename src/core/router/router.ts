@@ -1,7 +1,7 @@
 import { BaseRouter } from './base';
 
 import type { Route } from '../../interfaces/route';
-import type { Handler } from '../../interfaces/handler';
+import type { handler } from '../../interfaces/handler';
 
 export class Router extends BaseRouter {
   public routes: Route[];
@@ -10,7 +10,7 @@ export class Router extends BaseRouter {
     this.routes = [];
   }
 
-  public register(method: string, path: string, handler: Handler) {
+  public register(method: string, path: string, handler: handler) {
     this.routes.push({ method: method, path: path, handler: handler });
   }
 
