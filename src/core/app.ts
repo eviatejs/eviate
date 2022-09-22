@@ -6,14 +6,16 @@ import { AppState } from './state';
 import { startupBanner } from '../utils/startup-banner';
 import { AppParamsSchema } from '../schema/AppParams';
 import { AppListenParams } from '../schema/AppListenParams';
+import { Middleware, MiddlewareHandler } from './middlewares';
+
 import type { Serve } from 'bun';
 import type { Emitter } from 'event-emitter';
 import type { Handler } from '../interfaces/handler';
 import type { AppParamsInput, AppMetadata } from '../schema/AppParams';
 import type { AppListenParamsInput } from '../schema/AppListenParams';
 import type { Route } from '../interfaces/route';
-import { Middleware, MiddlewareHandler } from './middlewares';
-import { EviateMiddlewareResponse } from '../interfaces/response';
+import type { EviateMiddlewareResponse } from '../interfaces/response';
+
 export class Engine {
   public metadata: AppMetadata;
 
@@ -21,6 +23,7 @@ export class Engine {
   private router!: InternalRouter;
   private eventEmitter: Emitter;
   private middleware: Middleware;
+
   constructor(params?: AppParamsInput) {
     try {
       const { state, metadata } = AppParamsSchema.parse(params);
@@ -34,10 +37,10 @@ export class Engine {
       this.appState = new AppState(state);
     }
 
-    console.log(this.metadata);
     this.middleware = new Middleware();
     this.router = new InternalRouter();
     this.eventEmitter = this.router.event;
+
     startupBanner();
   }
 
@@ -69,7 +72,6 @@ export class Engine {
     this.router.post(path, handler);
   }
 
-  // Move host, and debug to the extra params and use zod.
   public listen(params?: AppListenParamsInput) {
     const parsedParams = AppListenParams.safeParse({ ...params });
 
@@ -84,9 +86,13 @@ export class Engine {
     return Bun.serve(this.serve(port, hostname, debug));
   }
 
-  public register(router: Router) {
+  public mount(router: Router, prefix?: string) {
     router.routes.map((value: Route) => {
-      this.router.register(value.method, value.path, value.handler);
+      if (!prefix) {
+        this.router.register(value.method, value.path, value.handler);
+      } else {
+        this.router.register(value.method, prefix + value.path, value.handler);
+      }
     });
   }
 
@@ -94,8 +100,8 @@ export class Engine {
     this.router.on(name, callback);
   }
 
-  public use(posi: string, context: MiddlewareHandler) {
-    switch (posi) {
+  public use(pos: string, context: MiddlewareHandler) {
+    switch (pos) {
       case 'start':
         this.middleware.register(0, context);
         return;
@@ -128,7 +134,9 @@ export class Engine {
         let ctx: Context = new Context(req);
         const resp: EviateMiddlewareResponse = await middleware.runBefore(ctx);
         const res = router.serveHandler(resp.ctx, resp.header || {});
+
         middleware.runAfter(ctx);
+
         return res;
       },
 
@@ -141,6 +149,6 @@ export class Engine {
 
   public shutdown() {
     this.eventEmitter.emit('shutdown');
-    process.exit();
+    process.exit(0);
   }
 }
