@@ -8,6 +8,7 @@ import { AppParamsSchema } from '../schema/AppParams';
 import { AppListenParams } from '../schema/AppListenParams';
 import { Middleware } from './middlewares';
 import { MiddlewareHandler } from '../interfaces';
+
 import type { Serve } from 'bun';
 import type { Emitter } from 'event-emitter';
 import type { handler } from '../interfaces/handler';

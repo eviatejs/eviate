@@ -3,10 +3,11 @@ import { BaseRouter } from './base';
 import { Context } from '../context';
 import { Tree } from '../tree/tree';
 import { EngineError } from '../error';
+import { routeMount } from '../../utils/router-logger';
+
 import type { handler } from '../../interfaces/handler';
 import type { MatchedData } from '../../interfaces/match';
 import type { EviateResponse } from '../../interfaces/response';
-import { routeMount } from '../../utils/router-logger';
 
 enum RouterEvent {
   Startup = 'startup',
@@ -67,12 +68,14 @@ export class InternalRouter extends BaseRouter {
     headers: { [key: string]: string }
   ): Response | null {
     const data = this.routes.get(ctx.method)?.find(ctx.path);
-    if (!data) {
-      return null;
-    }
+
+    if (!data) return null;
+
     ctx.params = data.params;
+
     const returnValue: EviateResponse = data.data.handler(ctx);
     if (!returnValue.headers) returnValue.headers = {};
+
     for (const header in headers) {
       returnValue.headers[header] = headers[header];
     }
@@ -80,12 +83,14 @@ export class InternalRouter extends BaseRouter {
     if (returnValue.text !== undefined && returnValue.json !== undefined) {
       throw new Error("You can't send both text and json object as response");
     }
+
     if (returnValue.error) {
       return new Response(JSON.stringify(returnValue.error) || '', {
         headers: returnValue.headers,
         status: returnValue.status || 404
       });
     }
+
     if (returnValue.headers) {
       switch (returnValue.headers['Content-type']) {
         case 'application/json':
@@ -93,13 +98,15 @@ export class InternalRouter extends BaseRouter {
             headers: returnValue.headers,
             status: returnValue.status || 200
           });
+
           return ctx.res;
 
-        case 'text/plain; charset=UTF-8':
+        case 'text/plain':
           ctx.res = new Response(returnValue.text || '', {
             headers: returnValue.headers,
             status: returnValue.status || 200
           });
+
           return ctx.res;
 
         case 'application/octet-stream':
@@ -107,6 +114,7 @@ export class InternalRouter extends BaseRouter {
             headers: returnValue.headers,
             status: returnValue.status || 200
           });
+
           return ctx.res;
 
         default:
@@ -117,9 +125,11 @@ export class InternalRouter extends BaseRouter {
               returnValue.text,
             { headers: returnValue.headers, status: returnValue.status || 200 }
           );
+
           return ctx.res;
       }
     }
+
     console.log(returnValue.headers);
     return ctx.res;
   }

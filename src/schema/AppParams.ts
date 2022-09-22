@@ -6,9 +6,6 @@ const AppMetadataSchema = z.object({
   version: z.string().default('1.0.0')
 });
 
-// TODO: Complete this
-const AppOpenAPISchema = z.object({});
-
 export const AppParamsSchema = z.object({
   metadata: AppMetadataSchema.default({}),
   state: z.record(z.string(), z.any()).default({})
