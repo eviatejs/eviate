@@ -6,7 +6,6 @@ import { AppState } from './state';
 import { startupBanner } from '../utils/startup-banner';
 import { AppParamsSchema } from '../schema/AppParams';
 import { AppListenParams } from '../schema/AppListenParams';
-
 import type { Serve } from 'bun';
 import type { Emitter } from 'event-emitter';
 import type { Handler } from '../interfaces/handler';

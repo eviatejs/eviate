@@ -1,10 +1,8 @@
 import event, { Emitter } from 'event-emitter';
-
 import { BaseRouter } from './base';
 import { Context } from '../context';
 import { Tree } from '../tree/tree';
 import { EngineError } from '../error';
-
 import type { Handler } from '../../interfaces/handler';
 import type { MatchedData } from '../../interfaces/match';
 import type { EviateResponse } from '../../interfaces/response';

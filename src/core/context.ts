@@ -18,7 +18,6 @@ export class Context {
   constructor(req: Request) {
     this.req = req;
     const url = new URL(req.url);
-
     this.method = req.method;
     this.path = url.pathname;
     this.host = url.host;

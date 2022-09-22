@@ -12,9 +12,9 @@ app.on('before-request', () => {
   console.log('Running pre request function');
 });
 
-app.on('unsupported-method', () => {
-  console.log('Unsupported method');
-});
+// app.on('unsupported-method', () => {
+//   console.log('Unsupported method');
+// });
 
 // Error handler
 app.error((err, ctx) => {
