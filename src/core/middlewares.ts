@@ -2,7 +2,6 @@ import { MiddlewarePosition } from '../enums/MiddlewarePosition';
 
 import type { Context } from '../core/context';
 import { EviateMiddlewareResponse } from '../interfaces/response';
-import { appendFileSync } from 'fs';
 
 export interface MiddlewareHandler {
   (ctx: Context): EviateMiddlewareResponse | Promise<EviateMiddlewareResponse>;

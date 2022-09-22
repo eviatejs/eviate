@@ -1,4 +1,4 @@
-import Router from './router/router';
+import { Router } from './router/router';
 import { InternalRouter } from './router/internal-router';
 import { Context } from './context';
 import { EngineError } from './error';

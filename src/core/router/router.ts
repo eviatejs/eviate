@@ -3,7 +3,7 @@ import { BaseRouter } from './base';
 import type { Route } from '../../interfaces/route';
 import type { Handler } from '../../interfaces/handler';
 
-export default class Router extends BaseRouter {
+export class Router extends BaseRouter {
   public routes: Route[];
   constructor() {
     super();
