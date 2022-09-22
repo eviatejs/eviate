@@ -58,7 +58,7 @@ app.patch('/patch', _ => {
 // Implement the router
 app.mount(router);
 
-app.use('start', (ctx: Context): any => {
+app.use('before', (ctx: Context): any => {
   console.log(ctx.path, ctx.method);
 
   return {
@@ -67,7 +67,7 @@ app.use('start', (ctx: Context): any => {
   };
 });
 
-app.use('start', (ctx: Context): any => {
+app.use('before', (ctx: Context): any => {
   console.log(ctx.path, ctx.method);
 
   return {

@@ -16,6 +16,11 @@ import type { AppListenParamsInput } from '../schema/AppListenParams';
 import type { Route } from '../interfaces/route';
 import type { EviateMiddlewareResponse } from '../interfaces/response';
 
+export enum MiddlewarePosition {
+  Before = 'before',
+  After = 'after'
+}
+
 export class Engine {
   public metadata: AppMetadata;
 
@@ -98,11 +103,11 @@ export class Engine {
 
   public use(pos: string, context: MiddlewareHandler) {
     switch (pos) {
-      case 'before':
+      case MiddlewarePosition.Before:
         this.middleware.register(0, context);
         return;
 
-      case 'after':
+      case MiddlewarePosition.After:
         this.middleware.register(1, context);
         return;
 
