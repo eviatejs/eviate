@@ -1,6 +1,5 @@
-import { Engine, Router } from '../src';
+import { Engine, Router } from '../src/core';
 import { Context } from '../src/core/context';
-import { EviateResponse } from '../src/interfaces/response';
 
 const app = new Engine();
 const router = new Router();
