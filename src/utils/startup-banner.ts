@@ -10,18 +10,13 @@ const osTypeMap: Record<string, any> = {
   Windows_NT: 'windows'
 };
 
-const isTypescript =
-  'typescript' in packageJson.dependencies ||
-  'typescript' in packageJson.devDependencies;
-const language = isTypescript ? 'typescript' : 'javascript';
-
 const banner = `
    ____     _      __
   / __/  __(_)__ _/ /____
  / _/| |/ / / _ / __/ -_)
 /___/|___/_/\_,_/\__/\__/
 
-v${packageJson.version} (${language}) | Running on ${osTypeMap[os.type()]}
+v${packageJson.version} | Running on ${osTypeMap[os.type()]}
 `;
 
 export const startupBanner = () => {
