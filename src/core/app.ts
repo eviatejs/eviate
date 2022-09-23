@@ -7,8 +7,8 @@ import { startupBanner } from '../utils/startup-banner';
 import { AppParamsSchema } from '../schema/AppParams';
 import { AppListenParams } from '../schema/AppListenParams';
 import { Middleware } from './middlewares';
-import { MiddlewareHandler } from '../interfaces';
-
+import { loadConfig } from '../utils/loadConfig';
+import type { config, MiddlewareHandler } from '../interfaces';
 import type { Serve } from 'bun';
 import type { Emitter } from 'event-emitter';
 import type { handler } from '../interfaces/handler';
@@ -24,7 +24,7 @@ export enum MiddlewarePosition {
 
 export class Engine {
   public metadata: AppMetadata;
-
+  public config!: config;
   private appState: AppState;
   private router!: InternalRouter;
   private eventEmitter: Emitter;
@@ -46,7 +46,7 @@ export class Engine {
     this.middleware = new Middleware();
     this.router = new InternalRouter();
     this.eventEmitter = this.router.event;
-
+    loadConfig(this);
     startupBanner();
   }
 
@@ -78,7 +78,7 @@ export class Engine {
     this.router.post(path, handler);
   }
 
-  public listen(params?: AppListenParamsInput) {
+  public async listen(params?: AppListenParamsInput) {
     const parsedParams = AppListenParams.safeParse({ ...params });
 
     if (!parsedParams.success) {

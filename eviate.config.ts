@@ -1,4 +1,4 @@
-import { config } from '../src/interfaces/config';
+import { config } from './src/interfaces';
 
 const config: config = {
   port: 3000,

@@ -3,8 +3,8 @@ import type { Context } from '../core/context';
 export interface EviateResponse {
   status?: number;
   text?: string;
-  json?: {};
-  error?: Error | string | {};
+  json?: { [key: string]: any };
+  error?: Error | string | { [key: string]: any };
   headers?: { [key: string]: string };
   interface?: any;
   Blob?: Blob;
