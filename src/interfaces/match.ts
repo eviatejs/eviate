@@ -1,6 +1,6 @@
-import type { Handler } from './handler';
+import type { handler } from './handler';
 
 export interface MatchedData {
   params: any; // TODO: Add proper typing.
-  handler: Handler;
+  handler: handler;
 }

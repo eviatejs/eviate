@@ -49,7 +49,6 @@ export class Middleware {
     mutate: { [key: string]: string } | null
   ): { [key: string]: string } {
     if (!mutate) {
-      console.log('no mutate');
       return orignal;
     }
     for (const header in mutate) {
