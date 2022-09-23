@@ -7,7 +7,7 @@ import { startupBanner } from '../utils/startup-banner';
 import { AppParamsSchema } from '../schema/AppParams';
 import { AppListenParams } from '../schema/AppListenParams';
 import { Middleware } from './middlewares';
-import { loadConfig } from '../utils/loadConfig';
+import { loadConfig } from '../utils/load-config';
 import type { config, MiddlewareHandler } from '../interfaces';
 import type { Serve } from 'bun';
 import type { Emitter } from 'event-emitter';
