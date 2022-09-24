@@ -76,4 +76,4 @@ app.use('before', (ctx: Context): any => {
   };
 });
 
-app.listen({ port: 4000 });
+app.listen();
