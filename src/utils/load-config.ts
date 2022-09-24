@@ -5,8 +5,7 @@ export async function loadConfig(app: Engine) {
     (await import(`${process.cwd()}/eviate.config.ts`)) ||
     import(`${process.cwd()}/eviate.config.js`);
 
-  if (!loadedData) throw new Error('sunrit implement this');
+  if (!loadedData) app.config = undefined;
 
   app.config = loadedData.default;
-  console.log(app.config);
 }

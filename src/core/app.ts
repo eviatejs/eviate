@@ -4,16 +4,20 @@ import { Context } from './context';
 import { EngineError } from './error';
 import { AppState } from './state';
 import { startupBanner } from '../utils/startup-banner';
-import { AppParamsSchema } from '../schema/AppParams';
-import { AppListenParams } from '../schema/AppListenParams';
+import {
+  defaultAppMetadataParams,
+  defaultAppStateParams
+} from '../schema/AppParams';
+import { defaultAppListenParams } from '../schema/AppListenParams';
 import { Middleware } from './middlewares';
 import { loadConfig } from '../utils/load-config';
+
 import type { config, MiddlewareHandler } from '../interfaces';
 import type { Serve } from 'bun';
 import type { Emitter } from 'event-emitter';
 import type { handler } from '../interfaces/handler';
-import type { AppParamsInput, AppMetadata } from '../schema/AppParams';
-import type { AppListenParamsInput } from '../schema/AppListenParams';
+import type { AppParams, AppMetadata } from '../schema/AppParams';
+import type { AppListenParams } from '../schema/AppListenParams';
 import type { Route } from '../interfaces/route';
 import type { EviateMiddlewareResponse } from '../interfaces/response';
 
@@ -24,29 +28,28 @@ export enum MiddlewarePosition {
 
 export class Engine {
   public metadata: AppMetadata;
-  public config!: config;
+  public config?: config;
+
   private appState: AppState;
   private router!: InternalRouter;
   private eventEmitter: Emitter;
   private middleware: Middleware;
 
-  constructor(params?: AppParamsInput) {
-    try {
-      const { state, metadata } = AppParamsSchema.parse(params);
+  constructor(params?: AppParams) {
+    const { state, metadata } = {
+      metadata: { ...defaultAppMetadataParams, ...params?.metadata },
+      state: { ...defaultAppStateParams, ...params?.state }
+    };
 
-      this.metadata = metadata;
-      this.appState = new AppState(state);
-    } catch (optionParseError) {
-      const { state, metadata } = AppParamsSchema.parse({});
-
-      this.metadata = metadata;
-      this.appState = new AppState(state);
-    }
+    this.metadata = metadata;
+    this.appState = new AppState(state);
 
     this.middleware = new Middleware();
     this.router = new InternalRouter();
     this.eventEmitter = this.router.event;
+
     loadConfig(this);
+
     startupBanner();
   }
 
@@ -78,14 +81,10 @@ export class Engine {
     this.router.post(path, handler);
   }
 
-  public async listen(params?: AppListenParamsInput) {
-    const parsedParams = AppListenParams.safeParse({ ...params });
+  public async listen(params?: AppListenParams) {
+    const { port, hostname, debug } = { ...defaultAppListenParams, ...params };
 
-    if (!parsedParams.success) {
-      throw new Error('Invalid params'); // TODO: Replace with custom errors
-    }
-
-    const { port, hostname, debug } = parsedParams.data;
+    // TODO: Utilization of the app config variables
 
     this.eventEmitter.emit('startup');
 
@@ -128,6 +127,7 @@ export class Engine {
   private serve(port: number, host: string, debug: boolean): Serve {
     const router: InternalRouter = this.router;
     const middleware: Middleware = this.middleware;
+
     return {
       port: port,
       hostname: host,

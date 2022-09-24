@@ -1,9 +1,11 @@
-import z from 'zod';
+export interface AppListenParams {
+  hostname: string;
+  port: number;
+  debug: boolean;
+}
 
-export const AppListenParams = z.object({
-  hostname: z.string().default('127.0.0.1'),
-  port: z.number().default(4000),
-  debug: z.boolean().default(false)
-});
-
-export type AppListenParamsInput = z.input<typeof AppListenParams>;
+export const defaultAppListenParams: AppListenParams = {
+  hostname: '127.0.0.1',
+  port: 4000,
+  debug: false
+};

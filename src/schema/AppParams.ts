@@ -1,15 +1,18 @@
-import z from 'zod';
+export interface AppMetadata {
+  title: string;
+  description: string;
+  version: string;
+}
 
-const AppMetadataSchema = z.object({
-  title: z.string().default('Eviate'),
-  description: z.string().default(''),
-  version: z.string().default('1.0.0')
-});
+export const defaultAppMetadataParams = {
+  title: 'Eviate',
+  description: '',
+  version: '1.0.0'
+};
 
-export const AppParamsSchema = z.object({
-  metadata: AppMetadataSchema.default({}),
-  state: z.record(z.string(), z.any()).default({})
-});
+export interface AppParams {
+  metadata: AppMetadata;
+  state: Record<string, any>;
+}
 
-export type AppParamsInput = z.input<typeof AppParamsSchema>;
-export type AppMetadata = z.output<typeof AppMetadataSchema>;
+export const defaultAppStateParams = {};
