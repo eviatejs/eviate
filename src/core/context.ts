@@ -1,6 +1,6 @@
 import type { Emitter } from 'event-emitter';
 
-export class Context {
+class BaseContext {
   req: Request;
   res: Response | null;
 
@@ -17,17 +17,25 @@ export class Context {
 
   constructor(req: Request) {
     this.req = req;
+
     const url = new URL(req.url);
     this.method = req.method;
+
     this.path = url.pathname;
     this.host = url.host;
     this.headers = req.headers;
     this.url = url;
+
     this.res = null;
     this.req.blob();
   }
+}
 
-  // Getter to check if the protocol is secure or not
+export class Context extends BaseContext {
+  constructor(req: Request) {
+    super(req);
+  }
+
   public get secure(): boolean {
     return this.url.protocol === 'https' || this.url.protocol === 'wss';
   }
