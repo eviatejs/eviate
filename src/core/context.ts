@@ -1,5 +1,3 @@
-import type { Emitter } from 'event-emitter';
-
 class BaseContext {
   req: Request;
   res: Response | null;
@@ -12,8 +10,6 @@ class BaseContext {
   readonly host: string;
   readonly headers: Request['headers'];
   readonly url: URL;
-
-  private eventHandler!: Emitter;
 
   constructor(req: Request) {
     this.req = req;
