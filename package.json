@@ -28,8 +28,8 @@
   },
   "dependencies": {
     "event-emitter": "^0.3.5",
-    "eviate-plugin": "^0.1.0-alpha.4",
-    "gradient-string": "^2.0.2"
+    "eviate-plugin": "^0.1.0-alpha.6",
+    "picocolors": "^1.0.0"
   },
   "devDependencies": {
     "@types/event-emitter": "^0.3.3",

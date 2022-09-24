@@ -1,8 +1,8 @@
-import gradient from 'gradient-string';
+import pc from 'picocolors';
 
 export function routeMount(method: string, path: string) {
   console.log(
-    gradient.summer(
+    pc.blue(
       `[${new Date().toLocaleTimeString()}]: Mounted ${method} request on path ${path}`
     )
   );
