@@ -82,9 +82,11 @@ export class Engine {
   }
 
   public async listen(params?: AppListenParams) {
-    const { port, hostname, debug } = { ...defaultAppListenParams, ...params };
-
-    // TODO: Utilization of the app config variables
+    const { port, hostname, debug } = {
+      ...defaultAppListenParams,
+      ...this.config,
+      ...params
+    };
 
     this.eventEmitter.emit('startup');
 
