@@ -1,6 +1,6 @@
 {
   "name": "eviate",
-  "version": "0.1.0-alpha.3",
+  "version": "0.1.0-alpha.4",
   "description": "Next-gen web framework for bun.js and node.js",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
