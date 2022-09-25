@@ -9,16 +9,20 @@ import type { handler } from '../../interfaces/handler';
 import type { MatchedData } from '../../interfaces/match';
 import type { EviateResponse } from '../../interfaces/response';
 import { EviatePlugin } from '../plugin/plugin';
+import { Engine } from '../app';
+import { Plugin } from 'eviate-plugin';
 
 const allRouterEvents = '- ' + Object.values(RouterEvent).join('\n- ');
 
 export class InternalRouter extends BaseRouter {
   public event: EventEmitter;
+  private state: Engine;
   public routes: Map<string, Tree>;
+  public isRan: boolean;
   public notFound: handler | undefined;
   public plugins: EviatePlugin;
   public pluginsRan: boolean;
-  constructor() {
+  constructor(state: Engine) {
     super();
 
     this.routes = new Map([
@@ -30,13 +34,17 @@ export class InternalRouter extends BaseRouter {
       ['DELETE', new Tree()],
       ['PATCH', new Tree()]
     ]);
-
+    this.isRan = false;
+    this.state = state;
     this.event = new EventEmitter();
     this.pluginsRan = false;
     this.plugins = new EviatePlugin();
   }
 
   public register(method: string, path: string, handler: handler) {
+    if (!this.isRan && this.plugins.getAllPlugins.length !== 0) {
+      this.handlePlugin();
+    }
     const tree: Tree | undefined = this.routes.get(method);
     tree?.add(path, { handler: handler });
     routeMount(method, path);
@@ -133,7 +141,6 @@ export class InternalRouter extends BaseRouter {
   }
 
   public get plugin(): EviatePlugin {
-    this.event.emit('plugin-load');
     return this.plugin;
   }
 
@@ -164,5 +171,12 @@ export class InternalRouter extends BaseRouter {
 
   public error(callback: (err: EngineError, ctx?: Context) => void) {
     this.event.on('err', callback);
+  }
+
+  private handlePlugin() {
+    this.plugin.getAllPlugins().forEach((p: Plugin) => {
+      p.handler(this.state);
+    });
+    this.isRan = true;
   }
 }

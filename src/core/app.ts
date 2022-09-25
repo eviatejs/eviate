@@ -1,5 +1,4 @@
 import { EviatePlugin } from './plugin/plugin';
-import { Plugin } from 'eviate-plugin';
 
 import { Router } from './router/router';
 import { InternalRouter } from './router/internal-router';
@@ -46,7 +45,7 @@ export class Engine {
     this.appState = new AppState({ ...state, ...this.config?.state });
 
     this.middleware = new Middleware();
-    this.router = new InternalRouter();
+    this.router = new InternalRouter(this);
     this.eventEmitter = this.router.event;
 
     startupBanner();
@@ -85,7 +84,6 @@ export class Engine {
   }
 
   public async listen(params?: AppListenParams) {
-    this.handlePlugin();
     const { port, hostname, debug } = {
       ...this.config,
       ...params,
@@ -162,14 +160,6 @@ export class Engine {
 
   public get plugin(): EviatePlugin {
     return this.router.plugin;
-  }
-
-  private handlePlugin() {
-    const plugin = this.router.plugin;
-
-    plugin.getAllPlugins().forEach((plugin: Plugin) => {
-      plugin.handler(this as any);
-    });
   }
 
   public shutdown() {
