@@ -1,5 +1,4 @@
 import { EviatePlugin } from './plugin/plugin';
-
 import { Router } from './router/router';
 import { InternalRouter } from './router/internal-router';
 import { Context } from './context';
