@@ -1,3 +1,6 @@
+import type { OpenAPISchema } from './OpenAPI';
+import type { Engine } from '../core';
+
 export interface AppMetadata {
   title: string;
   description: string;
@@ -13,6 +16,7 @@ export const defaultAppMetadataParams = {
 export interface AppParams {
   metadata: AppMetadata;
   state: Record<string, any>;
+  openapi?: (app: Engine) => OpenAPISchema;
 }
 
 export const defaultAppStateParams = {};

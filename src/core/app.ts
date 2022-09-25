@@ -37,14 +37,14 @@ export class Engine {
       state: { ...defaultAppStateParams, ...params?.state }
     };
 
+    loadConfig(this);
+
     this.metadata = metadata;
-    this.appState = new AppState(state);
+    this.appState = new AppState({ ...state, ...this.config?.state });
 
     this.middleware = new Middleware();
     this.router = new InternalRouter();
     this.eventEmitter = this.router.event;
-
-    loadConfig(this);
 
     startupBanner();
   }
