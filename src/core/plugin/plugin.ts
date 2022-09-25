@@ -9,8 +9,8 @@ export class EviatePlugin {
   }
 
   public setPlugin(plugin: Plugin) {
-    this.setPluginSettings(plugin.pluginMetaData.title, plugin.settings);
-    this.plugin.set(plugin.pluginMetaData.title, plugin);
+    this.setPluginSettings(plugin.metadata.title, plugin.settings);
+    this.plugin.set(plugin.metadata.title, plugin);
   }
 
   public getPlugin(title: string): Plugin | undefined {
