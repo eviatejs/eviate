@@ -21,11 +21,11 @@ import type { AppParams, AppMetadata } from '../schema/AppParams';
 import type { AppListenParams } from '../schema/AppListenParams';
 import type { Route } from '../interfaces/route';
 import type { EviateMiddlewareResponse } from '../interfaces/response';
-
+import { EviatePlugin } from './plugin/plugin';
 export class Engine {
   public metadata: AppMetadata;
   public config?: config;
-
+  public plugins: EviatePlugin;
   private appState: AppState;
   private router!: InternalRouter;
   private eventEmitter: EventEmitter;
@@ -41,7 +41,7 @@ export class Engine {
 
     this.metadata = metadata;
     this.appState = new AppState({ ...state, ...this.config?.state });
-
+    this.plugins = new EviatePlugin();
     this.middleware = new Middleware();
     this.router = new InternalRouter();
     this.eventEmitter = this.router.event;
@@ -79,9 +79,9 @@ export class Engine {
 
   public async listen(params?: AppListenParams) {
     const { port, hostname, debug } = {
-      ...defaultAppListenParams,
       ...this.config,
-      ...params
+      ...params,
+      ...defaultAppListenParams
     };
 
     this.eventEmitter.emit('startup');
@@ -149,6 +149,10 @@ export class Engine {
         console.log(error);
       }
     };
+  }
+
+  public get plugin(): EviatePlugin {
+    return this.plugin;
   }
 
   public shutdown() {
