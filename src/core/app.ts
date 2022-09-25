@@ -163,7 +163,7 @@ export class Engine {
     const plugin = this.router.plugin;
 
     plugin.getAllPlugins().forEach((plugin: Plugin) => {
-      plugin.middlewares(this);
+      // plugin.middlewares(this);
       plugin.routes;
     });
   }
