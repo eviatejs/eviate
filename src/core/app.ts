@@ -28,6 +28,7 @@ import type { EviateMiddlewareResponse } from '../interfaces/response';
 export class Engine {
   public metadata: AppMetadata;
   public config?: config;
+
   private appState: AppState;
   private router: InternalRouter;
   private eventEmitter: EventEmitter;
@@ -40,11 +41,14 @@ export class Engine {
     };
 
     loadConfig(this);
+
     this.metadata = metadata;
     this.appState = new AppState({ ...state, ...this.config?.state });
+
     this.middleware = new Middleware();
     this.router = new InternalRouter();
     this.eventEmitter = this.router.event;
+
     startupBanner();
   }
 
@@ -163,6 +167,7 @@ export class Engine {
       plugin.routes;
     });
   }
+
   public shutdown() {
     this.eventEmitter.emit('shutdown');
     process.exit(0);
