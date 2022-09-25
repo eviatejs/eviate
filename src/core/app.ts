@@ -1,3 +1,6 @@
+import { EviatePlugin } from './plugin/plugin';
+import { Plugin } from 'eviate-plugin';
+
 import { Router } from './router/router';
 import { InternalRouter } from './router/internal-router';
 import { Context } from './context';
@@ -25,9 +28,8 @@ import type { EviateMiddlewareResponse } from '../interfaces/response';
 export class Engine {
   public metadata: AppMetadata;
   public config?: config;
-
   private appState: AppState;
-  private router!: InternalRouter;
+  private router: InternalRouter;
   private eventEmitter: EventEmitter;
   private middleware: Middleware;
 
@@ -38,14 +40,11 @@ export class Engine {
     };
 
     loadConfig(this);
-
     this.metadata = metadata;
     this.appState = new AppState({ ...state, ...this.config?.state });
-
     this.middleware = new Middleware();
     this.router = new InternalRouter();
     this.eventEmitter = this.router.event;
-
     startupBanner();
   }
 
@@ -78,10 +77,11 @@ export class Engine {
   }
 
   public async listen(params?: AppListenParams) {
+    this.handlePlugin();
     const { port, hostname, debug } = {
-      ...defaultAppListenParams,
       ...this.config,
-      ...params
+      ...params,
+      ...defaultAppListenParams
     };
 
     this.eventEmitter.emit('startup');
@@ -151,6 +151,18 @@ export class Engine {
     };
   }
 
+  public get plugin(): EviatePlugin {
+    return this.router.plugin;
+  }
+
+  private handlePlugin() {
+    const plugin = this.router.plugin;
+
+    plugin.getAllPlugins().forEach((plugin: Plugin) => {
+      plugin.middlewares(this);
+      plugin.routes;
+    });
+  }
   public shutdown() {
     this.eventEmitter.emit('shutdown');
     process.exit(0);
