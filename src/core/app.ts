@@ -12,7 +12,6 @@ import { defaultAppListenParams } from '../schema/AppListenParams';
 import { Middleware } from './middlewares';
 import { loadConfig } from '../utils/load-config';
 import { UserMiddlewarePosition } from '../mappings/MiddlewarePosition';
-
 import type { config, MiddlewareHandler } from '../interfaces';
 import type { Serve } from 'bun';
 import type { EventEmitter } from '../utils/event-emitter';
@@ -22,12 +21,12 @@ import type { AppListenParams } from '../schema/AppListenParams';
 import type { Route } from '../interfaces/route';
 import type { EviateMiddlewareResponse } from '../interfaces/response';
 import { EviatePlugin } from './plugin/plugin';
+import { Plugin } from 'eviate-plugin';
 export class Engine {
   public metadata: AppMetadata;
   public config?: config;
-  public plugins: EviatePlugin;
   private appState: AppState;
-  private router!: InternalRouter;
+  private router: InternalRouter;
   private eventEmitter: EventEmitter;
   private middleware: Middleware;
 
@@ -38,14 +37,11 @@ export class Engine {
     };
 
     loadConfig(this);
-
     this.metadata = metadata;
     this.appState = new AppState({ ...state, ...this.config?.state });
-    this.plugins = new EviatePlugin();
     this.middleware = new Middleware();
     this.router = new InternalRouter();
     this.eventEmitter = this.router.event;
-
     startupBanner();
   }
 
@@ -78,6 +74,7 @@ export class Engine {
   }
 
   public async listen(params?: AppListenParams) {
+    this.handlePlugin();
     const { port, hostname, debug } = {
       ...this.config,
       ...params,
@@ -152,9 +149,16 @@ export class Engine {
   }
 
   public get plugin(): EviatePlugin {
-    return this.plugin;
+    return this.router.plugin;
   }
 
+  private handlePlugin() {
+    const plugin = this.router.plugin;
+    plugin.getAllPlugins().forEach((plugin: Plugin) => {
+      plugin.middlewares(this);
+      plugin.routes;
+    });
+  }
   public shutdown() {
     this.eventEmitter.emit('shutdown');
     process.exit(0);

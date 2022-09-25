@@ -5,10 +5,10 @@ import { EngineError } from '../error';
 import { routeMount } from '../../utils/router-logger';
 import { RouterEvent } from '../../mappings/RouterEvent';
 import { EventEmitter } from '../../utils/event-emitter';
-
 import type { handler } from '../../interfaces/handler';
 import type { MatchedData } from '../../interfaces/match';
 import type { EviateResponse } from '../../interfaces/response';
+import { EviatePlugin } from '../plugin/plugin';
 
 const allRouterEvents = '- ' + Object.values(RouterEvent).join('\n- ');
 
@@ -16,7 +16,8 @@ export class InternalRouter extends BaseRouter {
   public event: EventEmitter;
   public routes: Map<string, Tree>;
   public notFound: handler | undefined;
-
+  public plugins: EviatePlugin;
+  public pluginsRan: boolean;
   constructor() {
     super();
 
@@ -31,11 +32,12 @@ export class InternalRouter extends BaseRouter {
     ]);
 
     this.event = new EventEmitter();
+    this.pluginsRan = false;
+    this.plugins = new EviatePlugin();
   }
 
   public register(method: string, path: string, handler: handler) {
     const tree: Tree | undefined = this.routes.get(method);
-
     tree?.add(path, { handler: handler });
     routeMount(method, path);
   }
@@ -128,6 +130,10 @@ export class InternalRouter extends BaseRouter {
 
     console.log(returnValue.headers);
     return ctx.res;
+  }
+
+  public get plugin(): EviatePlugin {
+    return this.plugin;
   }
 
   public on(name: string, callback: any) {
