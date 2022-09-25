@@ -1,11 +1,16 @@
 import { Engine } from '../core';
-
+import { existsSync } from 'fs';
 export async function loadConfig(app: Engine) {
-  const loadedData =
-    (await import(`${process.cwd()}/eviate.config.ts`)) ||
-    import(`${process.cwd()}/eviate.config.js`);
+  let loadedData;
+  if (existsSync(`${process.cwd()}/eviate.config.ts`))
+    loadedData = await import(`${process.cwd()}/eviate.config.ts`);
+  if (existsSync(`${process.cwd()}/eviate.config.js`))
+    loadedData = await import(`${process.cwd()}/eviate.config.js`);
 
-  if (!loadedData) app.config = undefined;
+  if (!loadedData) {
+    app.config = undefined;
+    return;
+  }
 
   app.config = loadedData.default;
   app.config?.startMiddlewares?.forEach(m => {
