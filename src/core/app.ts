@@ -11,6 +11,7 @@ import {
 import { defaultAppListenParams } from '../schema/AppListenParams';
 import { Middleware } from './middlewares';
 import { loadConfig } from '../utils/load-config';
+import { UserMiddlewarePosition } from '../mappings/MiddlewarePosition';
 
 import type { config, MiddlewareHandler } from '../interfaces';
 import type { Serve } from 'bun';
@@ -20,11 +21,6 @@ import type { AppParams, AppMetadata } from '../schema/AppParams';
 import type { AppListenParams } from '../schema/AppListenParams';
 import type { Route } from '../interfaces/route';
 import type { EviateMiddlewareResponse } from '../interfaces/response';
-
-export enum MiddlewarePosition {
-  Before = 'before',
-  After = 'after'
-}
 
 export class Engine {
   public metadata: AppMetadata;
@@ -105,11 +101,11 @@ export class Engine {
 
   public use(pos: string, context: MiddlewareHandler) {
     switch (pos) {
-      case MiddlewarePosition.Before:
+      case UserMiddlewarePosition.Before:
         this.middleware.register(0, context);
         return;
 
-      case MiddlewarePosition.After:
+      case UserMiddlewarePosition.After:
         this.middleware.register(1, context);
         return;
 

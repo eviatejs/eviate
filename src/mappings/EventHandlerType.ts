@@ -1,7 +1,7 @@
-export enum EventHandlerType {
-  startup = 'startup',
-  shutdown = 'shutdown'
-}
+export const EventHandlerType = Object.freeze({
+  startup: 'startup',
+  shutdown: 'shutdown'
+});
 
 export const EventHandlerTypeList = [
   EventHandlerType.startup,

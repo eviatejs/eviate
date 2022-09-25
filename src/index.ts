@@ -1,3 +1,3 @@
 export * from './core';
-export * from './enums';
+export * from './mappings';
 export * from './interfaces';

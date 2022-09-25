@@ -1,14 +1,21 @@
-import { MiddlewarePosition } from '../enums/MiddlewarePosition';
+import { MiddlewarePosition } from '../mappings/MiddlewarePosition';
 
 import type { Context } from '../core/context';
 import { EviateMiddlewareResponse } from '../interfaces/response';
 import { MiddlewareHandler } from '../interfaces';
 
+type MiddlewarePositionKeys = keyof typeof MiddlewarePosition;
+type MiddlewarePositionValues =
+  typeof MiddlewarePosition[MiddlewarePositionKeys];
+
 export class Middleware {
   private before: MiddlewareHandler[] = [];
   private after: MiddlewareHandler[] = [];
 
-  public register(position: MiddlewarePosition, handler: MiddlewareHandler) {
+  public register(
+    position: MiddlewarePositionValues,
+    handler: MiddlewareHandler
+  ) {
     switch (position) {
       case MiddlewarePosition.Before:
         this.before.push(handler);

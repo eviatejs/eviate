@@ -4,16 +4,11 @@ import { Context } from '../context';
 import { Tree } from '../tree/tree';
 import { EngineError } from '../error';
 import { routeMount } from '../../utils/router-logger';
+import { RouterEvent } from '../../mappings/RouterEvent';
 
 import type { handler } from '../../interfaces/handler';
 import type { MatchedData } from '../../interfaces/match';
 import type { EviateResponse } from '../../interfaces/response';
-
-enum RouterEvent {
-  Startup = 'startup',
-  Shutdown = 'shutdown',
-  BeforeRequest = 'before-request'
-}
 
 const allRouterEvents = '- ' + Object.values(RouterEvent).join('\n- ');
 
