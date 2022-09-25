@@ -1,10 +1,10 @@
-import event, { Emitter } from 'event-emitter';
 import { BaseRouter } from './base';
 import { Context } from '../context';
 import { Tree } from '../tree/tree';
 import { EngineError } from '../error';
 import { routeMount } from '../../utils/router-logger';
 import { RouterEvent } from '../../mappings/RouterEvent';
+import { EventEmitter } from '../../utils/event-emitter';
 
 import type { handler } from '../../interfaces/handler';
 import type { MatchedData } from '../../interfaces/match';
@@ -13,9 +13,9 @@ import type { EviateResponse } from '../../interfaces/response';
 const allRouterEvents = '- ' + Object.values(RouterEvent).join('\n- ');
 
 export class InternalRouter extends BaseRouter {
-  public event: Emitter;
-  public notFound: handler | undefined;
+  public event: EventEmitter;
   public routes: Map<string, Tree>;
+  public notFound: handler | undefined;
 
   constructor() {
     super();
@@ -30,7 +30,7 @@ export class InternalRouter extends BaseRouter {
       ['PATCH', new Tree()]
     ]);
 
-    this.event = event();
+    this.event = new EventEmitter();
   }
 
   public register(method: string, path: string, handler: handler) {

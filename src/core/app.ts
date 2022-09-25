@@ -15,7 +15,7 @@ import { UserMiddlewarePosition } from '../mappings/MiddlewarePosition';
 
 import type { config, MiddlewareHandler } from '../interfaces';
 import type { Serve } from 'bun';
-import type { Emitter } from 'event-emitter';
+import type { EventEmitter } from '../utils/event-emitter';
 import type { handler } from '../interfaces/handler';
 import type { AppParams, AppMetadata } from '../schema/AppParams';
 import type { AppListenParams } from '../schema/AppListenParams';
@@ -28,7 +28,7 @@ export class Engine {
 
   private appState: AppState;
   private router!: InternalRouter;
-  private eventEmitter: Emitter;
+  private eventEmitter: EventEmitter;
   private middleware: Middleware;
 
   constructor(params?: AppParams) {
