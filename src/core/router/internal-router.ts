@@ -174,9 +174,9 @@ export class InternalRouter extends BaseRouter {
   }
 
   private handlePlugin() {
-    this.plugin.getAllPlugins().forEach((p: Plugin) => {
-      p.handler(this.state);
-    });
+    for (const key in this.plugin.getAllPlugins) {
+      this.plugin.getPlugin(key)?.handler(this);
+    }
     this.isRan = true;
   }
 }
