@@ -19,6 +19,7 @@ export class InternalRouter extends BaseRouter {
 
   constructor() {
     super();
+
     this.routes = new Map([
       ['GET', new Tree()],
       ['POST', new Tree()],

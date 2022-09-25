@@ -28,6 +28,13 @@ app.get('/', ctx => {
   };
 });
 
+app.get('/html', _ => {
+  return {
+    html: '<h1>Hi</h1>',
+    headers: { 'Content-Type': 'text/html' }
+  };
+});
+
 // Router routes
 router.post('/hello', ctx => {
   console.log(ctx.host);
