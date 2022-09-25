@@ -149,6 +149,12 @@ export class InternalRouter extends BaseRouter {
       case RouterEvent.BeforeRequest:
         this.event.on(name, callback);
         return;
+      case RouterEvent.Mount:
+        this.event.on(name, callback);
+        return;
+      case RouterEvent.Plugin:
+        this.event.on(name, callback);
+        return;
 
       default:
         throw new Error(`Event handler supports only:\n${allRouterEvents}`);
