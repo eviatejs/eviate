@@ -1,8 +1,8 @@
 import { MiddlewarePosition } from '../mappings/MiddlewarePosition';
 
 import type { Context } from '../core/context';
-import { EviateMiddlewareResponse } from '../interfaces/response';
-import { MiddlewareHandler } from '../interfaces';
+import type { EviateMiddlewareResponse } from '../interfaces/response';
+import type { MiddlewareHandler } from '../interfaces';
 
 type MiddlewarePositionKeys = keyof typeof MiddlewarePosition;
 type MiddlewarePositionValues =
