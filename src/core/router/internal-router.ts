@@ -133,6 +133,7 @@ export class InternalRouter extends BaseRouter {
   }
 
   public get plugin(): EviatePlugin {
+    this.event.emit('plugin-load');
     return this.plugin;
   }
 
@@ -147,6 +148,12 @@ export class InternalRouter extends BaseRouter {
         return;
 
       case RouterEvent.BeforeRequest:
+        this.event.on(name, callback);
+        return;
+      case RouterEvent.Mount:
+        this.event.on(name, callback);
+        return;
+      case RouterEvent.Plugin:
         this.event.on(name, callback);
         return;
 

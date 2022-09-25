@@ -517,6 +517,13 @@ eviate-plugin@^0.1.0-alpha.10:
   dependencies:
     eviate "^0.1.0-alpha.8"
 
+eviate-plugin@^0.1.0-alpha.11:
+  version "0.1.0-alpha.11"
+  resolved "https://registry.yarnpkg.com/eviate-plugin/-/eviate-plugin-0.1.0-alpha.11.tgz#85e04b895aef1ef8d2d6111e99dfb160a7526caa"
+  integrity sha512-YOiI30cPiZNnJsjGSDQdfHB2qcS/s0e3Ich9T7opS91rny/xUcsJ295qUN+g6XuVPg8R49knOXGDospjf9/mtA==
+  dependencies:
+    eviate "^0.1.0-alpha.9"
+
 eviate-plugin@^0.1.0-alpha.6, eviate-plugin@^0.1.0-alpha.7:
   version "0.1.0-alpha.7"
   resolved "https://registry.yarnpkg.com/eviate-plugin/-/eviate-plugin-0.1.0-alpha.7.tgz#cf143eef83647854c30974ebcb94229cabbea7c5"
@@ -541,6 +548,15 @@ eviate@^0.1.0-alpha.8:
   integrity sha512-q8wxhi6NIzibCOG1Flh5+Zk0m2wcYXB41ojy4kZyF8NZap3vA8mIcJQatpb12HUoLa5RUNkuP8qE4cHnGnxa1A==
   dependencies:
     eviate-plugin "^0.1.0-alpha.7"
+    picocolors "^1.0.0"
+    ws "^8.9.0"
+
+eviate@^0.1.0-alpha.9:
+  version "0.1.0-alpha.9"
+  resolved "https://registry.yarnpkg.com/eviate/-/eviate-0.1.0-alpha.9.tgz#f104106127ff5f4d212f53b92c76597ce68fc3a7"
+  integrity sha512-F2FzVNd6J3C27xJd+/CIxymIhc5lfCCj+yYrLRONL8OCuLVTNiMv9GTYEadNjwFJejGn1tZ6yxswMLuna5t9jQ==
+  dependencies:
+    eviate-plugin "^0.1.0-alpha.10"
     picocolors "^1.0.0"
     ws "^8.9.0"
 

@@ -52,6 +52,10 @@ export class Engine {
     startupBanner();
   }
 
+  public register(method: string, path: string, handler: handler) {
+    this.router.register(method, path, handler);
+  }
+
   public get(path: string, handler: handler) {
     this.router.get(path, handler);
   }
@@ -94,6 +98,7 @@ export class Engine {
   }
 
   public mount(router: Router, prefix?: string) {
+    this.router.event.emit('router-mount');
     router.routes.map((value: Route) => {
       if (!prefix) {
         this.router.register(value.method, value.path, value.handler);
