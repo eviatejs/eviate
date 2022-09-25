@@ -1,31 +1,26 @@
 import { Plugin, PluginSettings } from 'eviate-plugin';
 export class EviatePlugin {
-  private plugin: Map<string, Plugin>;
-  private pluginSettings: Map<string, PluginSettings>;
+  private plugin: { [key: string]: Plugin };
+  private pluginSettings: PluginSettings[];
 
   constructor() {
-    this.plugin = new Map();
-    this.pluginSettings = new Map();
+    this.plugin = {};
+    this.pluginSettings = [];
   }
 
   public setPlugin(plugin: Plugin) {
-    this.setPluginSettings(plugin.metadata.title, plugin.settings);
-    this.plugin.set(plugin.metadata.title, plugin);
+    this.plugin[plugin.metadata.title] = plugin;
   }
 
   public getPlugin(title: string): Plugin | undefined {
-    return this.plugin.get(title);
+    return this.plugin[title];
   }
 
-  public getAllPlugins(): Map<string, Plugin> {
+  public getAllPlugins(): { [key: string]: Plugin } {
     return this.plugin;
   }
 
-  private setPluginSettings(title: string, settings: PluginSettings) {
-    this.pluginSettings.set(title, Plugin);
-  }
-
-  public getSettings(title: string): PluginSettings | undefined {
-    return this.pluginSettings.get(title);
+  public setPluginSettings(settings: PluginSettings) {
+    this.pluginSettings.push(settings);
   }
 }
