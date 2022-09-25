@@ -133,6 +133,7 @@ export class InternalRouter extends BaseRouter {
   }
 
   public get plugin(): EviatePlugin {
+    this.event.emit('plugin-load');
     return this.plugin;
   }
 
