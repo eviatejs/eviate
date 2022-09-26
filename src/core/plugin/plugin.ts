@@ -1,4 +1,5 @@
 import { Plugin, PluginSettings } from 'eviate-plugin';
+
 export class EviatePlugin {
   private plugin: { [key: string]: Plugin };
   private pluginSettings: PluginSettings[];

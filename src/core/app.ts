@@ -1,4 +1,3 @@
-import { EviatePlugin } from './plugin/plugin';
 import { Router } from './router/router';
 import { InternalRouter } from './router/internal-router';
 import { Context } from './context';
@@ -13,6 +12,7 @@ import { defaultAppListenParams } from '../schema/AppListenParams';
 import { Middleware } from './middlewares';
 import { loadConfig } from '../utils/load-config';
 import { UserMiddlewarePosition } from '../mappings/MiddlewarePosition';
+import { PluginNamespace } from './namespace/plugin';
 
 import type { Serve } from 'bun';
 import type { EventEmitter } from 'sweet-event-emitter';
@@ -26,6 +26,7 @@ import type { EviateMiddlewareResponse } from '../interfaces/response';
 export class Engine {
   public metadata: AppMetadata;
   public config?: config;
+  public plugin: PluginNamespace;
 
   private appState: AppState;
   private router: InternalRouter;
@@ -42,6 +43,7 @@ export class Engine {
 
     this.metadata = metadata;
     this.appState = new AppState({ ...state, ...this.config?.state });
+    this.plugin = new PluginNamespace();
 
     this.middleware = new Middleware();
     this.router = new InternalRouter(this);
@@ -50,6 +52,7 @@ export class Engine {
     startupBanner();
   }
 
+  // Region: Route methods and registering
   public register(method: string, path: string, handler: handler) {
     this.router.register(method, path, handler);
   }
@@ -82,18 +85,7 @@ export class Engine {
     this.router.post(path, handler);
   }
 
-  public async listen(params?: AppListenParams) {
-    const { port, hostname, debug } = {
-      ...this.config,
-      ...params,
-      ...defaultAppListenParams
-    };
-
-    this.eventEmitter.emit('startup');
-
-    return Bun.serve(this.serve(port, hostname, debug));
-  }
-
+  // Region: Route and middleware mounting
   public mount(router: Router, prefix?: string) {
     this.router.event.emit('router-mount');
     router.routes.map((value: Route) => {
@@ -105,7 +97,10 @@ export class Engine {
     });
   }
 
-  public use(pos: string, context: MiddlewareHandler) {
+  public use(
+    context: MiddlewareHandler,
+    pos: string = UserMiddlewarePosition.Before
+  ) {
     switch (pos) {
       case UserMiddlewarePosition.Before:
         this.middleware.register(0, context);
@@ -120,6 +115,7 @@ export class Engine {
     }
   }
 
+  // Region: Events
   public on(name: string, callback: () => void) {
     this.router.on(name, callback);
   }
@@ -128,6 +124,11 @@ export class Engine {
     this.router.error(callback);
   }
 
+  // public get plugin(): EviatePlugin {
+  //   return this.router.plugin;
+  // }
+
+  // Region: Running the app
   private serve(port: number, host: string, debug: boolean): Serve {
     const router: InternalRouter = this.router;
     const middleware: Middleware = this.middleware;
@@ -157,8 +158,16 @@ export class Engine {
     };
   }
 
-  public get plugin(): EviatePlugin {
-    return this.router.plugin;
+  public async listen(params?: AppListenParams) {
+    const { port, hostname, debug } = {
+      ...this.config,
+      ...params,
+      ...defaultAppListenParams
+    };
+
+    this.eventEmitter.emit('startup');
+
+    return Bun.serve(this.serve(port, hostname, debug));
   }
 
   public shutdown() {

@@ -17,12 +17,14 @@ const allRouterEvents = '- ' + Object.values(RouterEvent).join('\n- ');
 
 export class InternalRouter extends BaseRouter {
   public event: EventEmitter;
-  private state: Engine;
   public routes: Map<string, Tree>;
   public isRan: boolean;
   public notFound: handler | undefined;
   public plugins: EviatePlugin;
   public pluginsRan: boolean;
+
+  private state: Engine;
+
   constructor(state: Engine) {
     super();
 
@@ -38,6 +40,7 @@ export class InternalRouter extends BaseRouter {
     this.isRan = false;
     this.state = state;
     this.event = new EventEmitter();
+
     this.pluginsRan = false;
     this.plugins = new EviatePlugin();
   }
