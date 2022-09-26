@@ -4,15 +4,15 @@ import { Context } from './context';
 import { EngineError } from './error';
 import { AppState } from './state';
 import { startupBanner } from '../utils/startup-banner';
+import { Middleware } from './middlewares';
+import { loadConfig } from '../utils/load-config';
+import { UserMiddlewarePosition } from '../mappings/MiddlewarePosition';
+import { PluginNamespace } from './namespace/plugin';
 import {
   defaultAppMetadataParams,
   defaultAppStateParams
 } from '../schema/AppParams';
 import { defaultAppListenParams } from '../schema/AppListenParams';
-import { Middleware } from './middlewares';
-import { loadConfig } from '../utils/load-config';
-import { UserMiddlewarePosition } from '../mappings/MiddlewarePosition';
-import { PluginNamespace } from './namespace/plugin';
 
 import type { Serve } from 'bun';
 import type { EventEmitter } from 'sweet-event-emitter';
