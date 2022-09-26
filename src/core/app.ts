@@ -15,8 +15,8 @@ import { loadConfig } from '../utils/load-config';
 import { UserMiddlewarePosition } from '../mappings/MiddlewarePosition';
 
 import type { Serve } from 'bun';
+import type { EventEmitter } from 'sweet-event-emitter';
 import type { config, MiddlewareHandler } from '../interfaces';
-import type { EventEmitter } from '../utils/event-emitter';
 import type { handler } from '../interfaces/handler';
 import type { AppParams, AppMetadata } from '../schema/AppParams';
 import type { AppListenParams } from '../schema/AppListenParams';
