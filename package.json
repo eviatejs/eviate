@@ -16,14 +16,12 @@
     "dist"
   ],
   "scripts": {
-    "dev": "bun run examples/main.ts",
     "build": "tsup",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write ./**/*.{ts,json,md}",
-    "release": "bumpp --commit --push --tag && npm publish",
-    "prepublishOnly": "bun run build",
     "test": "vitest --run",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prepublishOnly": "bun run build"
   },
   "dependencies": {
     "eviate-plugin": "^0.1.0-alpha.11",
@@ -31,7 +29,6 @@
     "ws": "^8.9.0"
   },
   "devDependencies": {
-    "bumpp": "^8.2.1",
     "bun-types": "^0.1.11",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
