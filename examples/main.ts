@@ -65,22 +65,22 @@ app.patch('/patch', _ => {
 // Implement the router
 app.mount(router);
 
-app.use('before', (ctx: Context): any => {
+app.use((ctx: Context): any => {
   console.log(ctx.path, ctx.method);
 
   return {
     ctx: ctx,
     header: { b: 'def' }
   };
-});
+}, 'before');
 
-app.use('before', (ctx: Context): any => {
+app.use((ctx: Context): any => {
   console.log(ctx.path, ctx.method);
 
   return {
     ctx: ctx,
     header: { c: 'no' }
   };
-});
+}, 'before');
 
 app.listen();
