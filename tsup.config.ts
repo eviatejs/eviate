@@ -5,7 +5,6 @@ export default defineConfig({
   clean: true,
   splitting: true,
   treeshake: true,
-  minify: true,
   format: ['cjs', 'esm'],
   external: ['bun'],
   dts: true

@@ -69,7 +69,7 @@ export class Server {
       let headers: Record<string, string> = {};
 
       for (let key in req.headers) {
-        if (req.headers.get(key)) headers[key] = req.headers.get(key) as string;
+        if (req.headers[key]) headers[key] = req.headers[key] as string;
       }
 
       let request = new Request(req.url, {

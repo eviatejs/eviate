@@ -13,6 +13,7 @@ import {
   defaultAppStateParams
 } from '../schema/AppParams';
 import { defaultAppListenParams } from '../schema/AppListenParams';
+import { Server } from '../runtime/server';
 
 import type { Serve } from 'bun';
 import type { EventEmitter } from 'sweet-event-emitter';
@@ -32,6 +33,7 @@ export class Engine {
   private router: InternalRouter;
   private eventEmitter: EventEmitter;
   private middleware: Middleware;
+  private server: Server;
 
   constructor(params?: AppParams) {
     const { state, metadata } = {
@@ -48,6 +50,13 @@ export class Engine {
     this.middleware = new Middleware();
     this.router = new InternalRouter(this);
     this.eventEmitter = this.router.event;
+
+    this.server = new Server(
+      this.config!,
+      this.router,
+      this.middleware,
+      this.eventEmitter
+    );
 
     startupBanner();
   }
@@ -129,45 +138,8 @@ export class Engine {
   // }
 
   // Region: Running the app
-  private serve(port: number, host: string, debug: boolean): Serve {
-    const router: InternalRouter = this.router;
-    const middleware: Middleware = this.middleware;
-
-    return {
-      port: port,
-      hostname: host,
-      debug: debug,
-
-      // @ts-ignore
-      async fetch(req: Request) {
-        router.event.emit('before-request');
-
-        let ctx: Context = new Context(req);
-        const resp: EviateMiddlewareResponse = await middleware.runBefore(ctx);
-        const res = router.serveHandler(resp.ctx, resp.header || {});
-
-        middleware.runAfter(ctx);
-
-        return res;
-      },
-
-      // @ts-ignore
-      error(error: Error) {
-        console.log(error);
-      }
-    };
-  }
-
   public async listen(params?: AppListenParams) {
-    const { port, hostname, debug } = {
-      ...this.config,
-      ...params,
-      ...defaultAppListenParams
-    };
-
-    this.eventEmitter.emit('startup');
-
-    Bun.serve(this.serve(port, hostname, debug));
+    this.server.listen(params);
   }
 
   public shutdown() {
