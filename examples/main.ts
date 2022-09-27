@@ -64,4 +64,5 @@ app.patch('/patch', _ => {
 
 // Implement the router
 app.mount(router);
+
 app.listen();
