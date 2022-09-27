@@ -45,6 +45,6 @@
     "allowSyntheticDefaultImports": true,
 
     // "bun-types" is the important part
-    "types": ["bun-types"]
+    "types": ["@types/node", "bun-types"]
   }
 }

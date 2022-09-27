@@ -167,7 +167,7 @@ export class Engine {
 
     this.eventEmitter.emit('startup');
 
-    return Bun.serve(this.serve(port, hostname, debug));
+    Bun.serve(this.serve(port, hostname, debug));
   }
 
   public shutdown() {

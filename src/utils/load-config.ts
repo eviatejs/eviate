@@ -1,5 +1,7 @@
-import { Engine } from '../core';
 import { existsSync } from 'fs';
+
+import type { Engine } from '../core';
+
 export async function loadConfig(app: Engine) {
   let loadedData;
   if (existsSync(`${process.cwd()}/eviate.config.ts`))
@@ -13,16 +15,22 @@ export async function loadConfig(app: Engine) {
   }
 
   app.config = loadedData.default;
-  app.config?.startMiddlewares?.forEach(m => {
-    app.use('before', m);
+
+  // Load the middlewares (if any)
+  app.config?.startMiddlewares?.forEach(handler => {
+    app.use(handler, 'before');
   });
-  app.config?.endMiddlewares?.forEach(m => {
-    app.use('after', m);
+  app.config?.endMiddlewares?.forEach(handler => {
+    app.use(handler, 'after');
   });
-  app.config?.plugins?.forEach(m => {
-    app.plugin.setPlugin(m);
+
+  // Load plugins (if any)
+  app.config?.plugins?.forEach(plugin => {
+    app.plugin.load(plugin);
   });
-  app.config?.routers?.forEach(m => {
-    app.mount(m);
+
+  // Load the routes (if any)
+  app.config?.routers?.forEach(route => {
+    app.mount(route);
   });
 }
