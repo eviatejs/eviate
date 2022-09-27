@@ -95,7 +95,6 @@ export class Server {
 
       this.middleware.runAfter(ctx);
 
-      res.writeHead(response?.status!, response?.headers!);
       res.end(response);
     });
 
