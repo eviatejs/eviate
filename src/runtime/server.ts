@@ -66,11 +66,10 @@ export class Server {
   private serveNode(http: typeof import('node:http')) {
     // TODO: Fix with proper type. `IncomingMessage` unable to be converted to type.
     const convertIncomingMessageToRequest = (req: any): Request => {
-      let headers = new Headers();
+      let headers: Record<string, string> = {};
 
       for (let key in req.headers) {
-        if (req.headers.get(key))
-          headers.append(key, req.headers.get(key) as string);
+        if (req.headers.get(key)) headers[key] = req.headers.get(key) as string;
       }
 
       let request = new Request(req.url, {
