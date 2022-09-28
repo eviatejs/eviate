@@ -4,7 +4,6 @@ class BaseContext {
 
   public params: any;
 
-  // HTTP-related metadata
   readonly method: string;
   readonly path: string;
   readonly host: string;
@@ -14,9 +13,9 @@ class BaseContext {
   constructor(req: Request) {
     this.req = req;
 
-    const url = new URL(req.url);
+    const url = new URL(req.url || '');
     this.method = req.method;
-
+    console.log(url.pathname);
     this.path = url.pathname;
     this.host = url.host;
     this.headers = req.headers;

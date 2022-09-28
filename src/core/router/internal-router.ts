@@ -1,5 +1,4 @@
 import { EventEmitter } from 'sweet-event-emitter';
-
 import { BaseRouter } from './base';
 import { Context } from '../context';
 import { Tree } from '../tree/tree';
@@ -11,6 +10,7 @@ import type { MatchedData } from '../../interfaces/match';
 import type { EviateResponse } from '../../interfaces/response';
 import { EviatePlugin } from '../plugin/plugin';
 import { Engine } from '../app';
+import { ServerResponse, IncomingMessage } from 'node:http';
 
 const allRouterEvents = '- ' + Object.values(RouterEvent).join('\n- ');
 
@@ -67,7 +67,7 @@ export class InternalRouter extends BaseRouter {
     return null;
   }
 
-  public serveHandler(
+  public serveBunHandler(
     ctx: Context,
     headers: { [key: string]: string }
   ): Response | null {
@@ -134,8 +134,70 @@ export class InternalRouter extends BaseRouter {
       }
     }
 
-    console.log(returnValue.headers);
     return ctx.res;
+  }
+
+  public serveNodeHandler(
+    ctx: Context,
+    headers: { [key: string]: string },
+    res: ServerResponse<IncomingMessage>
+  ): boolean {
+    const data = this.routes.get(ctx.method)?.find(ctx.path);
+    console.log(data);
+    if (!data) return false;
+
+    ctx.params = data.params;
+
+    const returnValue: EviateResponse = data.data.handler(ctx);
+    if (!returnValue.headers) returnValue.headers = {};
+
+    for (const header in headers) {
+      returnValue.headers[header] = headers[header];
+    }
+
+    if (returnValue.text !== undefined && returnValue.json !== undefined) {
+      throw new Error("You can't send both text and json object as response");
+    }
+
+    for (const headers in returnValue.headers) {
+      res.setHeader(headers, returnValue.headers[headers]);
+    }
+
+    if (returnValue.error) {
+      res.statusCode = returnValue.status || 404;
+      res.end(JSON.stringify(returnValue.error));
+      return true;
+    }
+    if (returnValue.headers) {
+      switch (returnValue.headers['Content-type']) {
+        case 'application/json':
+          res.statusCode = returnValue.status || 200;
+          res.end(JSON.stringify(returnValue.json));
+          return true;
+
+        case 'text/plain':
+          res.statusCode = returnValue.status || 200;
+          res.end(returnValue.text);
+
+          return true;
+
+        case 'application/octet-stream':
+          res.statusCode = returnValue.status || 200;
+          res.end(returnValue.Blob);
+          return true;
+
+        default:
+          res.statusCode = returnValue.status || 200;
+          res.end(
+            returnValue.interface ||
+              JSON.stringify(returnValue.json) ||
+              returnValue.Blob ||
+              returnValue.text
+          );
+          return true;
+      }
+    }
+    return true;
   }
 
   public get plugin(): EviatePlugin {

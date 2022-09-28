@@ -140,13 +140,11 @@ export class Engine {
       // @ts-ignore
       async fetch(req: Request) {
         router.event.emit('before-request');
-
         let ctx: Context = new Context(req);
         const resp: EviateMiddlewareResponse = await middleware.runBefore(ctx);
-        const res = router.serveHandler(resp.ctx, resp.header || {});
+        const res = router.serveBunHandler(resp.ctx, resp.header || {});
 
-        middleware.runAfter(ctx);
-
+        middleware.runAfter(resp.ctx);
         return res;
       },
 
@@ -174,11 +172,23 @@ export class Engine {
 
   private nodeServe(port: number, host: string) {
     http
-      .createServer((req, res) => {
-        // res.end("H")
-        const req2 = new Request(req?.url || '');
-        console.log(req2);
-        // return new Response("Hello")
+      .createServer(async (req, res) => {
+        console.log(typeof new Request(req.url || ''));
+        const standardReq = new Request(`http://localhost:${port}${req.url}`);
+        console.log(standardReq.url);
+        const ctx: Context = new Context(standardReq);
+        const resp: EviateMiddlewareResponse = await this.middleware.runBefore(
+          ctx
+        );
+        const bool: boolean = this.router.serveNodeHandler(
+          resp.ctx,
+          resp.header || {},
+          res
+        );
+        if (bool) {
+          this.middleware.runAfter(resp.ctx);
+        }
+        console.log(bool);
       })
       .listen(port, host);
   }
