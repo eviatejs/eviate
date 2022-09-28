@@ -69,9 +69,7 @@ export class Server {
     port: number
   ) {
     const server = http.createServer(async (req, res) => {
-      const standardRequest = new Request(
-        `http://${hostname}:${port}${req.url}`
-      );
+      const standardRequest = new Request(`http://${hostname}${req.url}`);
       const ctx: Context = new Context(standardRequest);
       const resp: EviateMiddlewareResponse = await this.middleware.runBefore(
         ctx

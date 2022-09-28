@@ -21,3 +21,4 @@ app.get('/json', _ => {
     headers: { 'Content-Type': 'application/json' }
   };
 });
+app.listen();
