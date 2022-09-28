@@ -174,7 +174,7 @@ export class Engine {
     http
       .createServer(async (req, res) => {
         console.log(typeof new Request(req.url || ''));
-        const standardReq = new Request(`http://localhost:${port}${req.url}`);
+        const standardReq = new Request(`http://${host}${req.url}`);
         console.log(standardReq.url);
         const ctx: Context = new Context(standardReq);
         const resp: EviateMiddlewareResponse = await this.middleware.runBefore(
