@@ -1,3 +1,4 @@
+import { Server } from '../runtime/server';
 import { Router } from './router/router';
 import { InternalRouter } from './router/internal-router';
 import { Context } from './context';
@@ -11,8 +12,8 @@ import {
   defaultAppMetadataParams,
   defaultAppStateParams
 } from '../schema/AppParams';
-import { defaultAppListenParams } from '../schema/AppListenParams';
-import http from 'node:http';
+import { EviatePlugin } from './plugin';
+
 import type { EventEmitter } from 'sweet-event-emitter';
 import type { config, MiddlewareHandler } from '../interfaces';
 import type { handler } from '../interfaces/handler';
@@ -20,13 +21,13 @@ import type { AppParams, AppMetadata } from '../schema/AppParams';
 import type { AppListenParams } from '../schema/AppListenParams';
 import type { Route } from '../interfaces/route';
 import type { EviateMiddlewareResponse } from '../interfaces/response';
-import { EviatePlugin } from './plugin';
 
 export class Engine {
   public metadata: AppMetadata;
   public config?: config;
-  private plugins: EviatePlugin;
 
+  private server: Server;
+  private plugins: EviatePlugin;
   private appState: AppState;
   private router: InternalRouter;
   private eventEmitter: EventEmitter;
@@ -41,15 +42,28 @@ export class Engine {
     loadConfig(this);
 
     this.metadata = metadata;
+
     this.appState = new AppState({ ...state, ...this.config?.state });
     this.plugins = new EviatePlugin(this);
-
     this.middleware = new Middleware();
     this.router = new InternalRouter(this);
     this.eventEmitter = this.router.event;
 
-    startupBanner();
+    this.server = new Server(
+      this.router,
+      this.middleware,
+      this.eventEmitter,
+      this.config
+    );
+
+    startupBanner(this.server.getRuntime());
   }
+
+  // Region: Getters and setters (properties)
+  public get plugin(): EviatePlugin {
+    return this.plugins;
+  }
+  // Endregion
 
   // Region: Route methods and registering
   public register(method: string, path: string, handler: handler) {
@@ -83,10 +97,12 @@ export class Engine {
   public post(path: string, handler: handler) {
     this.router.post(path, handler);
   }
+  // Endregion
 
   // Region: Route and middleware mounting
   public mount(router: Router, prefix?: string) {
     this.router.event.emit('router-mount');
+
     router.routes.map((value: Route) => {
       if (!prefix) {
         this.router.register(value.method, value.path, value.handler);
@@ -113,12 +129,9 @@ export class Engine {
         throw new Error('Invalid middleware position.');
     }
   }
+  // Endregion
 
-  public get plugin(): EviatePlugin {
-    return this.plugins;
-  }
-
-  // Region: Events
+  // Region: Events and error handler
   public on(name: string, callback: () => void) {
     this.router.on(name, callback);
   }
@@ -126,75 +139,16 @@ export class Engine {
   public error(callback: (err: EngineError, ctx?: Context) => void) {
     this.router.error(callback);
   }
+  // Endregion
 
   // Region: Running the app
-  private Bunserve(port: number, host: string, debug: boolean): any {
-    const router: InternalRouter = this.router;
-    const middleware: Middleware = this.middleware;
-
-    return {
-      port: port,
-      hostname: host,
-      debug: debug,
-
-      // @ts-ignore
-      async fetch(req: Request) {
-        router.event.emit('before-request');
-        let ctx: Context = new Context(req);
-        const resp: EviateMiddlewareResponse = await middleware.runBefore(ctx);
-        const res = router.serveBunHandler(resp.ctx, resp.header || {});
-
-        middleware.runAfter(resp.ctx);
-        return res;
-      },
-
-      // @ts-ignore
-      error(error: Error) {
-        console.log(error);
-      }
-    };
-  }
-
-  public async listen(runtime: string, params?: AppListenParams) {
-    const { port, hostname, debug } = {
-      ...this.config,
-      ...params,
-      ...defaultAppListenParams
-    };
-
-    this.eventEmitter.emit('startup');
-    if (runtime == 'node') {
-      this.nodeServe(port, hostname);
-    } else {
-      Bun.serve(this.Bunserve(port, hostname, debug));
-    }
-  }
-
-  private nodeServe(port: number, host: string) {
-    http
-      .createServer(async (req, res) => {
-        console.log(typeof new Request(req.url || ''));
-        const standardReq = new Request(`http://${host}${req.url}`);
-        console.log(standardReq.url);
-        const ctx: Context = new Context(standardReq);
-        const resp: EviateMiddlewareResponse = await this.middleware.runBefore(
-          ctx
-        );
-        const bool: boolean = this.router.serveNodeHandler(
-          resp.ctx,
-          resp.header || {},
-          res
-        );
-        if (bool) {
-          this.middleware.runAfter(resp.ctx);
-        }
-        console.log(bool);
-      })
-      .listen(port, host);
+  public async listen(params?: AppListenParams) {
+    this.server.listen(params);
   }
 
   public shutdown() {
     this.eventEmitter.emit('shutdown');
     process.exit(0);
   }
+  // Endregion
 }

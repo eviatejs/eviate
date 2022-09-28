@@ -3,5 +3,5 @@ export const RouterEvent = Object.freeze({
   Shutdown: 'shutdown',
   BeforeRequest: 'before-request',
   Mount: 'router-mount',
-  Plugin: 'plugin-load'
+  PluginLoad: 'plugin-load'
 });

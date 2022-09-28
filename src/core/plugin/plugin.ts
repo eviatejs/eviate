@@ -1,16 +1,17 @@
 import {
-  ReturnVal,
   Plugin,
   PluginSettings,
   RouteVal,
   MiddlewareVal
 } from '@eviatejs/plugin';
+
 import { Engine } from '../app';
 
 export class EviatePlugin {
   private plugin: Map<string, Plugin>;
   private pluginSettings: PluginSettings[];
   private app: Engine;
+
   constructor(app: Engine) {
     this.app = app;
     this.plugin = new Map();

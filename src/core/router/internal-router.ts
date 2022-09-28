@@ -5,12 +5,12 @@ import { Tree } from '../tree/tree';
 import { EngineError } from '../error';
 import { routeMount } from '../../utils/router-logger';
 import { RouterEvent } from '../../mappings/RouterEvent';
-import type { handler } from '../../interfaces/handler';
-import type { MatchedData } from '../../interfaces/match';
-import type { EviateResponse } from '../../interfaces/response';
 import { EviatePlugin } from '../plugin/plugin';
 import { Engine } from '../app';
-import { ServerResponse, IncomingMessage } from 'node:http';
+
+import type { ServerResponse, IncomingMessage } from 'node:http';
+import type { handler } from '../../interfaces/handler';
+import type { EviateResponse } from '../../interfaces/response';
 
 const allRouterEvents = '- ' + Object.values(RouterEvent).join('\n- ');
 
@@ -18,8 +18,8 @@ export class InternalRouter extends BaseRouter {
   public event: EventEmitter;
   public routes: Map<string, Tree>;
   public isRan: boolean;
-  public notFound: handler | undefined;
   public pluginsRan: boolean;
+  public notFound: handler | undefined;
 
   private state: Engine;
 
@@ -35,16 +35,22 @@ export class InternalRouter extends BaseRouter {
       ['DELETE', new Tree()],
       ['PATCH', new Tree()]
     ]);
-    this.isRan = false;
-    this.state = state;
-    this.event = new EventEmitter();
 
+    this.isRan = false;
     this.pluginsRan = false;
+    this.state = state;
+
+    this.event = new EventEmitter();
+  }
+
+  public get plugin(): EviatePlugin {
+    return this.plugin;
   }
 
   public register(method: string, path: string, handler: handler) {
     const tree: Tree | undefined = this.routes.get(method);
     tree?.add(path, { handler: handler });
+
     routeMount(method, path);
   }
 
@@ -52,28 +58,46 @@ export class InternalRouter extends BaseRouter {
     this.notFound = handler;
   }
 
-  private match(method: string, path: string): MatchedData | null {
-    const data = this.routes.get(method)?.find(path);
+  // Region: Event and Error handlers
+  public on(name: string, callback: any) {
+    switch (name) {
+      case RouterEvent.Startup:
+        this.event.on(name, callback);
+        return;
 
-    if (data) {
-      const returnData: MatchedData = {
-        params: data.params,
-        handler: data.data.handler
-      };
+      case RouterEvent.Shutdown:
+        this.event.on(name, callback);
+        return;
 
-      return returnData;
+      case RouterEvent.BeforeRequest:
+        this.event.on(name, callback);
+        return;
+
+      case RouterEvent.Mount:
+        this.event.on(name, callback);
+        return;
+
+      case RouterEvent.PluginLoad:
+        this.event.on(name, callback);
+        return;
+
+      default:
+        throw new Error(`Event handler supports only:\n${allRouterEvents}`);
     }
-
-    return null;
   }
 
+  public error(callback: (err: EngineError, ctx?: Context) => void) {
+    this.event.on('err', callback);
+  }
+
+  // Region: Handling each runtime (bun/node) separately
   public serveBunHandler(
     ctx: Context,
     headers: { [key: string]: string }
-  ): Response | null {
+  ): Response | undefined {
     const data = this.routes.get(ctx.method)?.find(ctx.path);
 
-    if (!data) return null;
+    if (!data) return undefined;
 
     ctx.params = data.params;
 
@@ -143,7 +167,7 @@ export class InternalRouter extends BaseRouter {
     res: ServerResponse<IncomingMessage>
   ): boolean {
     const data = this.routes.get(ctx.method)?.find(ctx.path);
-    console.log(data);
+
     if (!data) return false;
 
     ctx.params = data.params;
@@ -198,38 +222,5 @@ export class InternalRouter extends BaseRouter {
       }
     }
     return true;
-  }
-
-  public get plugin(): EviatePlugin {
-    return this.plugin;
-  }
-
-  public on(name: string, callback: any) {
-    switch (name) {
-      case RouterEvent.Startup:
-        this.event.on(name, callback);
-        return;
-
-      case RouterEvent.Shutdown:
-        this.event.on(name, callback);
-        return;
-
-      case RouterEvent.BeforeRequest:
-        this.event.on(name, callback);
-        return;
-      case RouterEvent.Mount:
-        this.event.on(name, callback);
-        return;
-      case RouterEvent.Plugin:
-        this.event.on(name, callback);
-        return;
-
-      default:
-        throw new Error(`Event handler supports only:\n${allRouterEvents}`);
-    }
-  }
-
-  public error(callback: (err: EngineError, ctx?: Context) => void) {
-    this.event.on('err', callback);
   }
 }

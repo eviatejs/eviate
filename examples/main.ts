@@ -7,13 +7,16 @@ import {
   ReturnVal,
   RouteVal
 } from '@eviatejs/plugin';
-import { EviateResponse } from '../src/interfaces';
+
+import type { EviateResponse } from '../src/interfaces';
+
 const app = new Engine();
 const router = new Router();
 
-class abc extends Plugin {
+class ABCPlugin extends Plugin {
   routes: RouteVal[];
   middleware: MiddlewareVal[];
+
   constructor() {
     super({
       title: 'abc',
@@ -23,6 +26,7 @@ class abc extends Plugin {
     this.routes = [];
     this.middleware = [];
   }
+
   handler(): ReturnVal {
     this.routes.push({
       method: 'GET',
@@ -31,18 +35,23 @@ class abc extends Plugin {
         return {};
       }
     });
+
     const returnVal: ReturnVal = {
       routes: this.routes,
       middlewares: this.middleware
     };
+
     return returnVal;
   }
+
   get settings(): PluginSettings {
     return {};
   }
 }
-app.plugin.load(new abc());
+
+app.plugin.load(new ABCPlugin());
 app.plugin.run();
+
 // Event Handlers
 app.on('startup', () => {
   console.log('Startup working');
@@ -122,4 +131,4 @@ app.use((ctx: Context): any => {
   };
 }, 'before');
 
-app.listen('node');
+app.listen();

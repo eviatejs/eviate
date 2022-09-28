@@ -9,7 +9,7 @@ export class Tree {
     this.root = null;
   }
 
-  add(path: string, data: Data) {
+  public add(path: string, data: Data) {
     if (this.isEmpty()) {
       this.root = new Node('', '', null);
     }
@@ -106,7 +106,7 @@ export class Tree {
     return this;
   }
 
-  appendNode(node: Node, path: string, fullPath: string, data: Data) {
+  public appendNode(node: Node, path: string, fullPath: string, data: Data) {
     let offset = 0;
 
     let child: Node = new Node('', '', {});
@@ -155,7 +155,7 @@ export class Tree {
       }
     }
 
-    child.path = path.substr(offset);
+    child.path = path.slice(offset);
     child.fullPath = fullPath;
     child.data = data;
 
@@ -164,7 +164,7 @@ export class Tree {
     return this;
   }
 
-  remove(path: string) {
+  public remove(path: string) {
     if (this.isEmpty()) {
       return this;
     }
@@ -248,14 +248,15 @@ export class Tree {
       case 0:
         parentNode.remove(node);
         break;
+
       case 1:
         let childNode = node.children[0];
         childNode.path = node.path + childNode.path;
 
         parentNode.remove(node);
         parentNode.append(childNode);
-
         break;
+
       default:
         break;
     }
@@ -263,19 +264,19 @@ export class Tree {
     return this;
   }
 
-  removeAll() {
+  public removeAll() {
     this.root = null;
 
     return this;
   }
 
-  countParams(path: string) {
+  public countParams(path: string) {
     let matches = path.match(/:|\*/g);
 
     return matches ? matches.length : 0;
   }
 
-  find(path: string) {
+  public find(path: string) {
     if (this.isEmpty()) {
       return undefined;
     }
@@ -357,7 +358,7 @@ export class Tree {
     return undefined;
   }
 
-  isEmpty() {
+  public isEmpty() {
     return this.root === null;
   }
 }

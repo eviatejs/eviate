@@ -20,5 +20,9 @@ export class EviateError extends Error {
 }
 
 export class EngineError {
-  public message!: string;
+  public message: string;
+
+  constructor(message: string) {
+    this.message = message;
+  }
 }

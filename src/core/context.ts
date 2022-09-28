@@ -1,8 +1,8 @@
 class BaseContext {
   req: Request;
-  res: Response | null;
+  res?: Response;
 
-  public params: any;
+  public params: any; // TODO: Add correct type here.
 
   readonly method: string;
   readonly path: string;
@@ -12,16 +12,15 @@ class BaseContext {
 
   constructor(req: Request) {
     this.req = req;
+    this.method = req.method;
+    this.headers = req.headers;
 
     const url = new URL(req.url || '');
-    this.method = req.method;
-    console.log(url.pathname);
     this.path = url.pathname;
     this.host = url.host;
-    this.headers = req.headers;
     this.url = url;
 
-    this.res = null;
+    this.res = undefined;
     this.req.blob();
   }
 }
@@ -34,7 +33,4 @@ export class Context extends BaseContext {
   public get secure(): boolean {
     return this.url.protocol === 'https' || this.url.protocol === 'wss';
   }
-
-  // Methods to parse the JSON response returned and convert into valid `Request` object.
-  // Ref: `dev/DESIGN.md`
 }

@@ -8,6 +8,8 @@ type MiddlewarePositionKeys = keyof typeof MiddlewarePosition;
 type MiddlewarePositionValues =
   typeof MiddlewarePosition[MiddlewarePositionKeys];
 
+type StringObject = { [key: string]: string };
+
 export class Middleware {
   private before: MiddlewareHandler[] = [];
   private after: MiddlewareHandler[] = [];
@@ -27,34 +29,38 @@ export class Middleware {
     }
   }
 
-  // Run the before middleware functions
-  public async runAfter(ctx: Context): Promise<EviateMiddlewareResponse> {
-    let resp: EviateMiddlewareResponse = { ctx: ctx };
-    for (const handler of this.before) {
-      resp = await handler(ctx);
-    }
+  public async runBefore(ctx: Context): Promise<EviateMiddlewareResponse> {
+    let resp: EviateMiddlewareResponse = { ctx: ctx, header: {} };
+
+    this.before.forEach(async (handler: MiddlewareHandler) => {
+      const mutate: EviateMiddlewareResponse = await handler(ctx);
+
+      mutate.header = this.appendHeaders(
+        resp.header || {},
+        mutate.header || undefined
+      );
+      resp = mutate;
+
+      return resp;
+    });
+
     return resp;
   }
 
-  // Run the after middleware functions
-  public async runBefore(ctx: Context): Promise<EviateMiddlewareResponse> {
-    let resp: EviateMiddlewareResponse = { ctx: ctx, header: {} };
-    this.before.forEach(async (handler: MiddlewareHandler) => {
-      const mutate: EviateMiddlewareResponse = await handler(ctx);
-      mutate.header = this.appendHeaders(
-        resp.header || {},
-        mutate.header || null
-      );
-      resp = mutate;
-      return resp;
-    });
+  public async runAfter(ctx: Context): Promise<EviateMiddlewareResponse> {
+    let resp: EviateMiddlewareResponse = { ctx: ctx };
+
+    for (const handler of this.before) {
+      resp = await handler(ctx);
+    }
+
     return resp;
   }
 
   private appendHeaders(
-    orignal: { [key: string]: string },
-    mutate: { [key: string]: string } | null
-  ): { [key: string]: string } {
+    orignal: StringObject,
+    mutate?: StringObject
+  ): StringObject {
     if (!mutate) {
       return orignal;
     }
