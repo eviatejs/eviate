@@ -12,6 +12,13 @@
   resolved "https://registry.yarnpkg.com/@esbuild/linux-loong64/-/linux-loong64-0.15.9.tgz#b658a97babf1f40783354af7039b84c3fdfc3fc3"
   integrity sha512-O+NfmkfRrb3uSsTa4jE3WApidSe3N5++fyOVGP1SmMZi4A3BZELkhUUvj5hwmMuNdlpzAZ8iAPz2vmcR7DCFQA==
 
+"@eviatejs/plugin@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@eviatejs/plugin/-/plugin-0.1.2.tgz#9cad78cbd8ef92b766c71b80db9b77646331609b"
+  integrity sha512-CCtniBqIu3qwGO/GSEBFTqErW+TmUm10kfsh0zvsNotsNd3BBNbB83visimuIfNiO7CLMyywIA4aIpvnxjupOw==
+  dependencies:
+    sweet-event-emitter "^0.1.0"
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"
@@ -380,22 +387,6 @@ esbuild@^0.15.1:
     esbuild-windows-32 "0.15.9"
     esbuild-windows-64 "0.15.9"
     esbuild-windows-arm64 "0.15.9"
-
-eviate-plugin@^0.1.0, eviate-plugin@^0.1.0-alpha.11:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/eviate-plugin/-/eviate-plugin-0.1.0.tgz#fa3b9978e881c28191c62286607825aeebdc9daf"
-  integrity sha512-k7golOIMMyKk2vBpr8oDAb9SfkAVh+hh02GV9gAyJTUISmzxww+cxMIdX2ae/9DGo648FIxa7i62cOkFUOmjYA==
-  dependencies:
-    eviate "^0.1.0-alpha.11"
-
-eviate@^0.1.0-alpha.11:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/eviate/-/eviate-0.1.0.tgz#b878fee432d1178523f3efe955fb83a906040895"
-  integrity sha512-oEQ0UlIatk2X6kRUsV+6O08alw0HCTPg26zIlmzu+xp4ft5unIi3nl0qKsOe9kPqKN9AJ0P7iqSWpWncXGHbrw==
-  dependencies:
-    eviate-plugin "^0.1.0-alpha.11"
-    picocolors "^1.0.0"
-    ws "^8.9.0"
 
 execa@^5.0.0:
   version "5.1.1"

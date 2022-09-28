@@ -7,7 +7,6 @@ import { startupBanner } from '../utils/startup-banner';
 import { Middleware } from './middlewares';
 import { loadConfig } from '../utils/load-config';
 import { UserMiddlewarePosition } from '../mappings/MiddlewarePosition';
-import { PluginNamespace } from './namespace/plugin';
 import {
   defaultAppMetadataParams,
   defaultAppStateParams
@@ -23,11 +22,12 @@ import type { AppParams, AppMetadata } from '../schema/AppParams';
 import type { AppListenParams } from '../schema/AppListenParams';
 import type { Route } from '../interfaces/route';
 import type { EviateMiddlewareResponse } from '../interfaces/response';
+import { EviatePlugin } from './plugin';
 
 export class Engine {
   public metadata: AppMetadata;
   public config?: config;
-  public plugin: PluginNamespace;
+  private plugins: EviatePlugin;
 
   private appState: AppState;
   private router: InternalRouter;
@@ -45,7 +45,7 @@ export class Engine {
 
     this.metadata = metadata;
     this.appState = new AppState({ ...state, ...this.config?.state });
-    this.plugin = new PluginNamespace();
+    this.plugins = new EviatePlugin(this);
 
     this.middleware = new Middleware();
     this.router = new InternalRouter(this);
@@ -122,6 +122,10 @@ export class Engine {
       default:
         throw new Error('Invalid middleware position.');
     }
+  }
+
+  public get plugin(): EviatePlugin {
+    return this.plugins;
   }
 
   // Region: Events

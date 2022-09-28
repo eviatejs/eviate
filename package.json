@@ -1,6 +1,6 @@
 {
   "name": "eviate",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Next-gen web framework for bun.js and node.js",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -24,7 +24,7 @@
     "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "eviate-plugin": "^0.1.0",
+    "@eviatejs/plugin": "^0.1.2",
     "picocolors": "^1.0.0",
     "sweet-event-emitter": "^0.1.0",
     "ws": "^8.9.0"

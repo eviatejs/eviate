@@ -94,7 +94,6 @@ export class Server {
       const response = this.router.serveHandler(resp.ctx, resp.header || {});
 
       this.middleware.runAfter(ctx);
-
       res.end(response);
     });
 
