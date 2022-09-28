@@ -1,4 +1,4 @@
-import { Plugin } from 'eviate-plugin';
+import { Plugin } from '@eviatejs/plugin';
 import { Router } from '../core';
 import { MiddlewareHandler } from './middlewareHandler';
 
