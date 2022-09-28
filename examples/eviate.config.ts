@@ -2,9 +2,10 @@ import { config } from '../src/interfaces/config';
 
 const config: config = {
   port: 3000,
-  host: 'localhost',
+  hostname: 'localhost',
   debug: true,
-  middlewares: []
+  startMiddlewares: [],
+  endMiddlewares: []
 };
 
 export default config;
