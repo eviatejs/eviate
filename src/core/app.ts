@@ -12,8 +12,7 @@ import {
   defaultAppStateParams
 } from '../schema/AppParams';
 import { defaultAppListenParams } from '../schema/AppListenParams';
-
-import type { Serve } from 'bun';
+import http from 'node:http';
 import type { EventEmitter } from 'sweet-event-emitter';
 import type { config, MiddlewareHandler } from '../interfaces';
 import type { handler } from '../interfaces/handler';
@@ -128,12 +127,8 @@ export class Engine {
     this.router.error(callback);
   }
 
-  // public get plugin(): EviatePlugin {
-  //   return this.router.plugin;
-  // }
-
   // Region: Running the app
-  private serve(port: number, host: string, debug: boolean): Serve {
+  private Bunserve(port: number, host: string, debug: boolean): any {
     const router: InternalRouter = this.router;
     const middleware: Middleware = this.middleware;
 
@@ -162,7 +157,7 @@ export class Engine {
     };
   }
 
-  public async listen(params?: AppListenParams) {
+  public async listen(runtime: string, params?: AppListenParams) {
     const { port, hostname, debug } = {
       ...this.config,
       ...params,
@@ -170,8 +165,22 @@ export class Engine {
     };
 
     this.eventEmitter.emit('startup');
+    if (runtime == 'node') {
+      this.nodeServe(port, hostname);
+    } else {
+      Bun.serve(this.Bunserve(port, hostname, debug));
+    }
+  }
 
-    Bun.serve(this.serve(port, hostname, debug));
+  private nodeServe(port: number, host: string) {
+    http
+      .createServer((req, res) => {
+        // res.end("H")
+        const req2 = new Request(req?.url || '');
+        console.log(req2);
+        // return new Response("Hello")
+      })
+      .listen(port, host);
   }
 
   public shutdown() {
