@@ -12,8 +12,7 @@ import {
   defaultAppStateParams
 } from '../schema/AppParams';
 import { defaultAppListenParams } from '../schema/AppListenParams';
-
-import type { Serve } from 'bun';
+import http from 'node:http';
 import type { EventEmitter } from 'sweet-event-emitter';
 import type { config, MiddlewareHandler } from '../interfaces';
 import type { handler } from '../interfaces/handler';
@@ -128,12 +127,8 @@ export class Engine {
     this.router.error(callback);
   }
 
-  // public get plugin(): EviatePlugin {
-  //   return this.router.plugin;
-  // }
-
   // Region: Running the app
-  private serve(port: number, host: string, debug: boolean): Serve {
+  private Bunserve(port: number, host: string, debug: boolean): any {
     const router: InternalRouter = this.router;
     const middleware: Middleware = this.middleware;
 
@@ -145,13 +140,11 @@ export class Engine {
       // @ts-ignore
       async fetch(req: Request) {
         router.event.emit('before-request');
-
         let ctx: Context = new Context(req);
         const resp: EviateMiddlewareResponse = await middleware.runBefore(ctx);
-        const res = router.serveHandler(resp.ctx, resp.header || {});
+        const res = router.serveBunHandler(resp.ctx, resp.header || {});
 
-        middleware.runAfter(ctx);
-
+        middleware.runAfter(resp.ctx);
         return res;
       },
 
@@ -162,7 +155,7 @@ export class Engine {
     };
   }
 
-  public async listen(params?: AppListenParams) {
+  public async listen(runtime: string, params?: AppListenParams) {
     const { port, hostname, debug } = {
       ...this.config,
       ...params,
@@ -170,8 +163,34 @@ export class Engine {
     };
 
     this.eventEmitter.emit('startup');
+    if (runtime == 'node') {
+      this.nodeServe(port, hostname);
+    } else {
+      Bun.serve(this.Bunserve(port, hostname, debug));
+    }
+  }
 
-    Bun.serve(this.serve(port, hostname, debug));
+  private nodeServe(port: number, host: string) {
+    http
+      .createServer(async (req, res) => {
+        console.log(typeof new Request(req.url || ''));
+        const standardReq = new Request(`http://localhost:${port}${req.url}`);
+        console.log(standardReq.url);
+        const ctx: Context = new Context(standardReq);
+        const resp: EviateMiddlewareResponse = await this.middleware.runBefore(
+          ctx
+        );
+        const bool: boolean = this.router.serveNodeHandler(
+          resp.ctx,
+          resp.header || {},
+          res
+        );
+        if (bool) {
+          this.middleware.runAfter(resp.ctx);
+        }
+        console.log(bool);
+      })
+      .listen(port, host);
   }
 
   public shutdown() {
