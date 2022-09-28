@@ -1,9 +1,48 @@
 import { Engine, Router } from '../src/core';
 import { Context } from '../src/core/context';
-
+import {
+  MiddlewareVal,
+  Plugin,
+  PluginSettings,
+  ReturnVal,
+  RouteVal
+} from '@eviatejs/plugin';
+import { EviateResponse } from '../src/interfaces';
 const app = new Engine();
 const router = new Router();
 
+class abc extends Plugin {
+  routes: RouteVal[];
+  middleware: MiddlewareVal[];
+  constructor() {
+    super({
+      title: 'abc',
+      description: '',
+      version: '1.0'
+    });
+    this.routes = [];
+    this.middleware = [];
+  }
+  handler(): ReturnVal {
+    this.routes.push({
+      method: 'GET',
+      path: '/routes/oof',
+      handler: (ctx: Context): EviateResponse => {
+        return {};
+      }
+    });
+    const returnVal: ReturnVal = {
+      routes: this.routes,
+      middlewares: this.middleware
+    };
+    return returnVal;
+  }
+  get settings(): PluginSettings {
+    return {};
+  }
+}
+app.plugin.load(new abc());
+app.plugin.run();
 // Event Handlers
 app.on('startup', () => {
   console.log('Startup working');
@@ -64,4 +103,23 @@ app.patch('/patch', _ => {
 
 // Implement the router
 app.mount(router);
+
+app.use((ctx: Context): any => {
+  console.log(ctx.path, ctx.method);
+
+  return {
+    ctx: ctx,
+    header: { b: 'def' }
+  };
+}, 'before');
+
+app.use((ctx: Context): any => {
+  console.log(ctx.path, ctx.method);
+
+  return {
+    ctx: ctx,
+    header: { c: 'no' }
+  };
+}, 'before');
+
 app.listen();

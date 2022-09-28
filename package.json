@@ -24,6 +24,7 @@
     "prepublishOnly": "bun run build"
   },
   "dependencies": {
+    "@eviatejs/plugin": "^0.1.2",
     "eviate-plugin": "^0.1.0",
     "picocolors": "^1.0.0",
     "sweet-event-emitter": "^0.1.0",

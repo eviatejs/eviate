@@ -11,7 +11,6 @@ import type { MatchedData } from '../../interfaces/match';
 import type { EviateResponse } from '../../interfaces/response';
 import { EviatePlugin } from '../plugin/plugin';
 import { Engine } from '../app';
-import { Plugin } from 'eviate-plugin';
 
 const allRouterEvents = '- ' + Object.values(RouterEvent).join('\n- ');
 
@@ -20,7 +19,6 @@ export class InternalRouter extends BaseRouter {
   public routes: Map<string, Tree>;
   public isRan: boolean;
   public notFound: handler | undefined;
-  public plugins: EviatePlugin;
   public pluginsRan: boolean;
 
   private state: Engine;
@@ -42,13 +40,9 @@ export class InternalRouter extends BaseRouter {
     this.event = new EventEmitter();
 
     this.pluginsRan = false;
-    this.plugins = new EviatePlugin();
   }
 
   public register(method: string, path: string, handler: handler) {
-    if (!this.isRan && this.plugins.getAllPlugins.length !== 0) {
-      this.handlePlugin();
-    }
     const tree: Tree | undefined = this.routes.get(method);
     tree?.add(path, { handler: handler });
     routeMount(method, path);
@@ -175,12 +169,5 @@ export class InternalRouter extends BaseRouter {
 
   public error(callback: (err: EngineError, ctx?: Context) => void) {
     this.event.on('err', callback);
-  }
-
-  private handlePlugin() {
-    for (const key in this.plugin.getAllPlugins) {
-      this.plugin.getPlugin(key)?.handler(this);
-    }
-    this.isRan = true;
   }
 }
