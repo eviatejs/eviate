@@ -71,8 +71,8 @@ app.error((err, ctx) => {
 app.get('/', ctx => {
   console.log(ctx.method);
   return {
-    text: 'Hi',
-    headers: { a: 'xyz' }
+    interface: ctx.file('./main.html'),
+    headers: { 'Content-Type': 'text/html' }
   };
 });
 

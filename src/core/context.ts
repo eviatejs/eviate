@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+
 class BaseContext {
   req: Request;
   res?: Response;
@@ -32,5 +34,10 @@ export class Context extends BaseContext {
 
   public get secure(): boolean {
     return this.url.protocol === 'https' || this.url.protocol === 'wss';
+  }
+
+  public file(path: string): Buffer {
+    const file = readFileSync(path);
+    return file;
   }
 }
