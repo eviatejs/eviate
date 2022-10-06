@@ -98,7 +98,7 @@ export class Server {
       ...params
     };
 
-    this.eventEmitter.emit('startup');
+    this.eventEmitter.emit('startup', { port, hostname, debug });
 
     if (runtime === 'bun') {
       Bun.serve(this.serveBun(hostname, port, debug));

@@ -41,23 +41,20 @@ const app = new Eviate({
 ### Run the app
 
 ```ts
-app.listen(
-  {
-    host: '127.0.0.1',
-    port: 3000,
-    debug: true
-  },
-  async () => {
-    console.log('Listening on port 3000');
-  }
-);
+app.listen({
+  host: '127.0.0.1',
+  port: 3000,
+  debug: true
+});
 ```
 
 ## App event handlers
 
 ```ts
-app.on_event('startup', async () => {
+app.on_event('startup', async ({ port }) => {
   app.state.client = new Client();
+
+  console.log(`Listening on port ${port}`);
 });
 
 app.on_event('shutdown', async () => {

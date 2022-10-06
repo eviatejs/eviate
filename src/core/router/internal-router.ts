@@ -59,7 +59,7 @@ export class InternalRouter extends BaseRouter {
   }
 
   // Region: Event and Error handlers
-  public on(name: string, callback: any) {
+  public on(name: string, callback: (...args: any[]) => void) {
     switch (name) {
       case RouterEvent.Startup:
         this.event.on(name, callback);

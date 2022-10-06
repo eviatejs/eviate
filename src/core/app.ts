@@ -132,7 +132,7 @@ export class Engine {
   // Endregion
 
   // Region: Events and error handler
-  public on(name: string, callback: () => void) {
+  public on(name: string, callback: (...args: any[]) => void) {
     this.router.on(name, callback);
   }
 

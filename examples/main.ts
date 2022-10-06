@@ -1,11 +1,11 @@
 import { Engine, Router } from '../src/core';
 import { Context } from '../src/core/context';
 import {
-  MiddlewareVal,
+  MiddlewareValue,
   Plugin,
   PluginSettings,
-  ReturnVal,
-  RouteVal
+  ReturnValue,
+  RouteValue
 } from '@eviatejs/plugin';
 
 import type { EviateResponse } from '../src/interfaces';
@@ -14,8 +14,8 @@ const app = new Engine();
 const router = new Router();
 
 class ABCPlugin extends Plugin {
-  routes: RouteVal[];
-  middleware: MiddlewareVal[];
+  routes: RouteValue[];
+  middleware: MiddlewareValue[];
 
   constructor() {
     super({
@@ -23,11 +23,12 @@ class ABCPlugin extends Plugin {
       description: '',
       version: '1.0'
     });
+
     this.routes = [];
     this.middleware = [];
   }
 
-  handler(): ReturnVal {
+  handler(): ReturnValue {
     this.routes.push({
       method: 'GET',
       path: '/routes/oof',
@@ -36,12 +37,12 @@ class ABCPlugin extends Plugin {
       }
     });
 
-    const returnVal: ReturnVal = {
+    const returnValue: ReturnValue = {
       routes: this.routes,
       middlewares: this.middleware
     };
 
-    return returnVal;
+    return returnValue;
   }
 
   get settings(): PluginSettings {
