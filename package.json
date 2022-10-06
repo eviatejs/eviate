@@ -24,12 +24,12 @@
     "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "@eviatejs/plugin": "^0.1.2",
+    "@eviatejs/plugin": "^0.1.3",
     "picocolors": "^1.0.0",
     "sweet-event-emitter": "^0.1.0"
   },
   "devDependencies": {
-    "@types/node": "^18.7.23",
+    "@types/node": "^18.8.2",
     "bun-types": "^0.1.11",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",

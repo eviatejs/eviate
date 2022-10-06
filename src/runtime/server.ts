@@ -93,9 +93,9 @@ export class Server {
     const runtime = this.getRuntime();
 
     const { port, hostname, debug } = {
+      ...defaultAppListenParams,
       ...this.config,
-      ...params,
-      ...defaultAppListenParams
+      ...params
     };
 
     this.eventEmitter.emit('startup');

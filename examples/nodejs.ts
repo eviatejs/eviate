@@ -21,4 +21,7 @@ app.get('/json', _ => {
     headers: { 'Content-Type': 'application/json' }
   };
 });
-app.listen();
+
+app.listen({
+  port: 3001
+});

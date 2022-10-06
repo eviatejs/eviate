@@ -1,55 +1,57 @@
 import {
   Plugin,
   PluginSettings,
-  RouteVal,
-  MiddlewareVal
+  RouteValue,
+  MiddlewareValue
 } from '@eviatejs/plugin';
 
 import { Engine } from '../app';
 
 export class EviatePlugin {
-  private plugin: Map<string, Plugin>;
-  private pluginSettings: PluginSettings[];
   private app: Engine;
+  private plugins: Map<string, Plugin>;
+  private pluginSettings: PluginSettings[];
 
   constructor(app: Engine) {
     this.app = app;
-    this.plugin = new Map();
+    this.plugins = new Map();
     this.pluginSettings = [];
   }
 
   public load(plugin: Plugin) {
-    this.plugin.set(plugin.metadata.title, plugin);
+    this.plugins.set(plugin.metadata.title, plugin);
   }
 
   public get(title: string): Plugin | undefined {
-    return this.plugin.get(title);
+    return this.plugins.get(title);
   }
 
   public getAll(): Map<string, Plugin> {
-    return this.plugin;
+    return this.plugins;
   }
 
   public settings(settings: PluginSettings) {
     this.pluginSettings.push(settings);
   }
 
-  private saveRoutes(routes: RouteVal[]) {
-    routes.forEach((val: RouteVal) => {
+  private saveRoutes(routes: RouteValue[]) {
+    routes.forEach((val: RouteValue) => {
       this.app.register(val.method, val.path, val.handler);
     });
   }
 
-  private saveMiddleware(middle: MiddlewareVal[]) {
-    middle.forEach((val: MiddlewareVal) => {
+  private saveMiddleware(middle: MiddlewareValue[]) {
+    middle.forEach((val: MiddlewareValue) => {
       this.app.use(val.handler, val.position);
     });
   }
 
   public run() {
-    const plug = this.getAll();
-    plug.forEach((val: Plugin) => {
-      const handler = val.handler();
+    const plugins = this.getAll();
+
+    plugins.forEach((plugin: Plugin) => {
+      const handler = plugin.handler();
+
       if (handler.routes.length != 0) this.saveRoutes(handler.routes);
       if (handler.middlewares.length != 0)
         this.saveMiddleware(handler.middlewares);
