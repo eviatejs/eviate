@@ -1,3 +1,4 @@
+import { throws } from 'node:assert';
 import { readFileSync } from 'node:fs';
 
 class BaseContext {
@@ -5,7 +6,7 @@ class BaseContext {
   res?: Response;
 
   public params: any; // TODO: Add correct type here.
-
+  readonly body: {};
   readonly method: string;
   readonly path: string;
   readonly host: string;
@@ -16,7 +17,7 @@ class BaseContext {
     this.req = req;
     this.method = req.method;
     this.headers = req.headers;
-
+    this.body = req.json();
     const url = new URL(req.url || '');
     this.path = url.pathname;
     this.host = url.host;
