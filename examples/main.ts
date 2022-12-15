@@ -33,7 +33,9 @@ class ABCPlugin extends Plugin {
       method: 'GET',
       path: '/routes/oof',
       handler: (ctx: Context): EviateResponse => {
-        return {};
+        return {
+          text: 'Helo'
+        };
       }
     });
 

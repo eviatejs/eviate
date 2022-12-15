@@ -23,5 +23,5 @@ app.get('/json', _ => {
 });
 
 app.listen({
-  port: 3001
+  port: 3000
 });

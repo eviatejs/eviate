@@ -7,7 +7,6 @@ import { routeMount } from '../../utils/router-logger';
 import { RouterEvent } from '../../mappings/RouterEvent';
 import { EviatePlugin } from '../plugin/plugin';
 import { Engine } from '../app';
-
 import type { ServerResponse, IncomingMessage } from 'node:http';
 import type { handler } from '../../interfaces/handler';
 import type { EviateResponse } from '../../interfaces/response';
