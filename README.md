@@ -46,7 +46,7 @@ const app = new Engine();
 
 app.get('/', ctx => {
   return {
-    message: 'Hello world!'
+    text: 'Hello world!'
   };
 });
 
