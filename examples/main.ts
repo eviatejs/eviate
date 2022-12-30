@@ -78,7 +78,15 @@ app.get('/', ctx => {
     headers: { 'Content-Type': 'text/html' }
   };
 });
-
+app.get('/json', _ => {
+  return {
+    headers: { 'Content-Type': 'appliation/json' },
+    json: {
+      name: 'Hello',
+      why: 'hi'
+    }
+  };
+});
 app.get('/html', _ => {
   return {
     interface: '<h1>Hi</h1>',
